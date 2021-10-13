@@ -22,6 +22,9 @@ Repositório para materiais da disciplina de Análise e Projeto de Sistemas 2021
         2. [ ] Diagrama de classes da arquitetura, organização em pacotes
         3. [ ] Pelo menos um dos casos de uso deve envolver interação com um sistema externo (de forma que surjam subsistemas na arquitetura)
     4. [ ] Explorar padrões de projeto e arquiteturas
+    5. [ ] Implementação de 2 casos de uso. 
+        1. [ ] CRUD
+        2. [ ] Com agente externo
 3. Refinamento               - 13 de dez.
 
 
