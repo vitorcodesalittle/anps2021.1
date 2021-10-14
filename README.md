@@ -8,13 +8,13 @@ Repositório para materiais da disciplina de Análise e Projeto de Sistemas 2021
 2. Arquitetura               -  3 de nov.
     1. [ ] Documento de Requisitos com diagrama de casos de uso
     2. [ ] Análise de 3 casos de uso
-        1. [ ] Caso tal
-            1. [ ] Diagrama de Sequência ou Diagrama de Colaboração
+        1. [ ] Caso 0 - Login e Criação de conta
+            1. [x] Diagrama de Sequência ou Diagrama de Colaboração
             2. [ ] VOPC (Diagrama de classes)
-        2. [ ] Caso tal 2
-            1. [ ] Diagrama de Sequência ou Diagrama de Colaboração
+        2. [ ] Caso 1 - Gerenciamento de produtos
+            1. [x] Diagrama de Sequência ou Diagrama de Colaboração
             2. [ ] VOPC (Diagrama de classes)
-        3. [ ] Caso tal 3
+        3. [ ] Caso 3 - Gerenciamento de vendas
             1. [ ] Diagrama de Sequência ou Diagrama de Colaboração
             2. [ ] VOPC (Diagrama de classes)
     3. [ ] Arquitetura da aplicação
