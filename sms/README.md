@@ -127,12 +127,12 @@ informativo.
 2. O usuário seleciona "Registrar venda"
 3. O usuário preenche as informações da venda: endereço, método de entrega, 
 produtos e quantidades
-4. O sistema valida as informações
-5. O sistema se comunica com o serviço de transporta para calcular o frete da
+4. O sistema valida as informações, impedindo que a venda supere o estoque.
+6. O sistema se comunica com o serviço de transporta para calcular o frete da
 venda, anexando-o à venda.
 6. O sistema salva a venda e retira os produtos vendidos do estoque.
 - Fluxo de eventos secundário:
-1. No passo 5, caso as informações não sejam válidas, o usuário recebe um
+1. No passo 4, caso as informações não sejam válidas, o usuário recebe um
 feedback informativo.
 ---
 
@@ -142,14 +142,14 @@ feedback informativo.
 - Pós-condição: A compra é registrada
 - Fluxo de eventos principal:
 1. O usuário seleciona "Estoque"
-2. O usuário seleciona "Registrar compra de Matéria Prima"
+2. O usuário seleciona "Registrar compra de Matéria Prima ou Produto"
 3. O usuário informa quais matérias primas e produtos foram compradas, especificando
 o fornecedor, a quantidade e o preço por unidade.
-4. O sistema valida as informações
-5. Caso sejam informações válidas, o sistema registra a compra da matéria prima
-6. O usuário recebe um feedback informando-o que a compra foi registrada
+4. O sistema valida as informações.
+6. Caso sejam informações válidas, o sistema registra a compra da matéria prima
+7. O usuário recebe um feedback informando-o que a compra foi registrada
 - Fluxo de eventos secundário:
-1. No passo 4, caso a requisição seja inválida, o usuário recebe um
+8. No passo 4, caso a requisição seja inválida, o usuário recebe um
 feedback informativo.
 ---
 
