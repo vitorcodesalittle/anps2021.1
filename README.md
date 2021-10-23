@@ -19,9 +19,9 @@ Repositório para materiais da disciplina de Análise e Projeto de Sistemas 2021
             1. [x] Diagrama de Sequência ou Diagrama de Colaboração
             2. [x] VOPC (Diagrama de classes)
     4. [ ] Arquitetura da aplicação
-        1. [ ] [Mapeamento de classes de análise em elementos de projeto](./sms/TabelaClassesAnaliseClassesProjeto.md)
-        2. [ ] Diagrama de classes da arquitetura, organização em pacotes
-        3. [ ] Pelo menos um dos casos de uso deve envolver interação com um sistema externo (de forma que surjam subsistemas na arquitetura)
+        1. [ ] ~~[Mapeamento de classes de análise em elementos de projeto](./sms/TabelaClassesAnaliseClassesProjeto.md)~~ _Definir pacote global. Colocar Address ? Date ?_
+        2. [ ] ~~Diagrama de classes da arquitetura, organização em pacotes~~ _revisar_
+        3. [x] Pelo menos um dos casos de uso deve envolver interação com um sistema externo (de forma que surjam subsistemas na arquitetura)
     5. [ ] Explorar padrões de projeto e arquiteturas
         1. [ ] Padrão [Adapter](https://refactoring.guru/pt-br/design-patterns/adapter) para incorporar diferentes métodos de entrega.
     7. [ ] Implementação de 2 casos de uso. 

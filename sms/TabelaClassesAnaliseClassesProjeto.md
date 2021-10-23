@@ -2,6 +2,7 @@
 | Classes de Análise | Elementos de Projeto | Reason |
 |--------------------|----------------------|--------|
 | User               | Store, User          | [1](./TabelaClassesAnaliseClassesProjeto.md#1)       |
+| UserController     | UserController, StoreController| [1] |
 | UserCollection     | UserCollection, UserRepository, UserRepositoryRDB, StoreRepository, StoreRepositoryRDB||
 | ProductCollection  | ProductCollection, ProductRepository, ProductRepositoryRDB ||
 | TransactionCollection | TransactionCollection, TransactionRepository, TransactionRepositoryRDB ||
