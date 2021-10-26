@@ -6,6 +6,8 @@ No contexto de uma loja genérica, queremos criar uma aplicação que permita.
 
 ![Use Cases](./use-cases.png)
 
+A implementação pode ser encontrada em [SMS-web](./SMS-web/)
+
 ## Casos de Uso
 
 ### Criação de Conta
