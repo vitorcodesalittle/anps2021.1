@@ -12,6 +12,8 @@ libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0
 libraryDependencies += jdbc
 // https://mvnrepository.com/artifact/org.postgresql/postgresql
 libraryDependencies += "org.postgresql" % "postgresql" % "42.2.24"
+libraryDependencies += "com.typesafe.play" %% "play-slick" % "5.0.0"
+libraryDependencies += "com.h2database" % "h2" % "1.4.200"
 // Adds additional packages into Twirl
 //TwirlKeys.templateImports += "br.ufpe.cin.controllers._"
 
