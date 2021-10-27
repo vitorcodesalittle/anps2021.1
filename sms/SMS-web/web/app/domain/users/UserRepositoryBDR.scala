@@ -7,7 +7,6 @@ import slick.jdbc.meta.MTable
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext, Future}
-import scala.util.Success
 
 @Singleton
 class UserRepositoryBDR @Inject()(dbConfigProvider: DatabaseConfigProvider)(implicit ec: ExecutionContext) extends UserRepository {
@@ -28,6 +27,7 @@ class UserRepositoryBDR @Inject()(dbConfigProvider: DatabaseConfigProvider)(impl
 
   val users = TableQuery[Users]
 
+  // @TODO: This code for every repo seens weird.
   val existing = db.run(MTable.getTables)
   val f = existing.flatMap( v => {
     val names = v.map(mt => mt.name.name)

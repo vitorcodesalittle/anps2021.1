@@ -1,13 +1,12 @@
 package controllers
 
-import domain.users.{User, UserRepositoryBDR}
-import play.api.libs.json.Json
-
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.concurrent.duration.Duration
+import play.api.libs.json.Json
 import play.api.mvc._
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.duration.Duration
+import domain.users.{User, UserRepositoryBDR}
 
 @Singleton
 class UserController @Inject() (val repo: UserRepositoryBDR, val controllerComponents: ControllerComponents)
