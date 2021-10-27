@@ -1,0 +1,18 @@
+@import domain.users.forms.UserSignUp
+
+@(userForm: Form[UserSignUp])(implicit messages: MessagesRequestHeader)
+
+@import helper._
+
+@main("Registre-se no Stock Management System") {
+    <div>
+        <h3>Registre-se</h3>
+        @helper.form(action = CSRF(routes.UserController.signUp())) {
+            @inputText(userForm("name"))
+            @inputText(userForm("email"))
+            @inputText(userForm("password"))
+            @CSRF.formField
+            <input type="submit">Enviar</input>
+        }
+    </div>
+}
