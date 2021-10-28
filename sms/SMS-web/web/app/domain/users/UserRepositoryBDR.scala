@@ -37,9 +37,7 @@ class UserRepositoryBDR @Inject()(dbConfigProvider: DatabaseConfigProvider)(impl
   })
   Await.result(f, Duration.Inf)
 
-  override def getAll(): Future[Seq[User]] = db.run {
-    users.result
-  }
+  def getAll(): Future[Seq[User]] = db run users.result
 
   override def create(user: User): Future[User] = db.run {
     (users returning users.map(_.id) into ((_, newId) => user.copy(id = Some(newId))) ) += user
@@ -50,4 +48,8 @@ class UserRepositoryBDR @Inject()(dbConfigProvider: DatabaseConfigProvider)(impl
   override def update(thing: User): Future[User] = ???
 
   override def remove(thing: User): Future[Int] = ???
+
+  override def getByEmail(email: String): Future[User] = db.run {
+    users.filter(user => user.email === email).result.head
+  }
 }

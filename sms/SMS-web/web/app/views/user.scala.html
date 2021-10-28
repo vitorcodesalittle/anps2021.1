@@ -1,11 +1,20 @@
-@import domain.users.forms.SignUpData
+@import domain.users.forms.{SignUpData, LoginData}
 
-@(userForm: Form[SignUpData])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+@(userForm: Form[SignUpData], loginForm: Form[LoginData])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
 @import helper._
 
 @main("Registre-se no Stock Management System") {
 <div>
+    <h2>Entre</h2>
+    @helper.form(action = routes.UserController.login()) {
+    @inputText(loginForm("email"))
+    @inputText(loginForm("password"))
+    @CSRF.formField
+    <input type="submit">Enviar</input>
+    }
+
+    <small>ou</small>
     <h3>Registre-se</h3>
     @helper.form(action = routes.UserController.signUp()) {
     @inputText(userForm("name"))

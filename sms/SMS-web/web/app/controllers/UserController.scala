@@ -1,7 +1,7 @@
 package controllers
 
-import domain.users.forms.SignUpData
-import domain.users.{User, UserRepositoryBDR}
+import domain.users.forms.{LoginData, SignUpData}
+import domain.users.{UserRepositoryBDR, User}
 import play.api.data.Form
 import play.api.data.Forms.{mapping, text}
 import play.api.libs.json._
@@ -9,7 +9,8 @@ import play.api.mvc._
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.concurrent.{ExecutionContext, Future, Await}
+import scala.util.{Success, Failure}
 
 trait PostRequestHeader extends MessagesRequestHeader with PreferredMessagesProvider
 
@@ -18,7 +19,7 @@ class UserController @Inject()(repo: UserRepositoryBDR, val controllerComponents
                               (implicit ec: ExecutionContext) extends BaseController with play.api.i18n.I18nSupport {
   implicit val userWrites: OWrites[User] = Json.writes[User]
 
-  val userForm: Form[SignUpData] = Form(
+  val signUpForm: Form[SignUpData] = Form(
     mapping(
       "name" -> text(minLength = 1),
       "email" -> text(minLength = 1),
@@ -26,22 +27,36 @@ class UserController @Inject()(repo: UserRepositoryBDR, val controllerComponents
     )(SignUpData.apply)(SignUpData.unapply)
   )
 
+  val loginForm: Form[LoginData] = Form(
+    mapping(
+      "email" -> text(minLength = 1),
+      "password" -> text
+    )(LoginData.apply)(LoginData.unapply)
+  )
+
   def index: Action[AnyContent] = Action { implicit request =>
-    Ok(views.html.user(userForm))
+    Ok(views.html.user(signUpForm, loginForm))
   }
 
-  def login(): Action[AnyContent] = Action {
-    NotImplemented("Sorry")
+  def login(): Action[AnyContent] = Action { implicit request => {
+    val loginData = loginForm.bindFromRequest.get
+    val userFuture = repo getByEmail (loginData.email)
+    val maybeUser = Await.ready(userFuture, Duration.Inf).value.get
+    Ok(maybeUser match {
+      case Success(u) => Json.toJson(u) // @TODO: proper redirect
+      case Failure(_) => Json.toJson(Map("message" -> "Invalid username or password"))
+    }).as("application/json")
+  }
   }
 
   def signUp(): Action[AnyContent] = Action { implicit request => {
-    val userData = userForm.bindFromRequest.get
-    val passwordStrength = verifyPasswordStrength(userData.password)
+    val signUpData = signUpForm.bindFromRequest.get
+    val passwordStrength = verifyPasswordStrength(signUpData.password)
     if (passwordStrength < 6) {
       BadRequest(Json.toJson(Map("message" -> "Password is too weak")))
     } else {
       // @TODO: validation
-      val user = User(id = None, email = userData.email, name = userData.name, passwordHash = Some(hashPassword(userData.password)), passwordSalt = Some(genSalt()))
+      val user = User(id = None, email = signUpData.email, name = signUpData.name, passwordHash = Some(hashPassword(signUpData.password)), passwordSalt = Some(genSalt()))
       val savedUser = Await.result(repo.create(user), Duration.Inf) // @TODO: Duration.Inf ???
       Ok(Json.toJson(savedUser)).as("application/json")
     }

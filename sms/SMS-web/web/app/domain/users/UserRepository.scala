@@ -2,4 +2,8 @@ package domain.users
 
 import util.Repository
 
-trait UserRepository extends Repository[User]
+import scala.concurrent.Future
+
+trait UserRepository extends Repository[User] {
+  def getByEmail(email: String): Future[User]
+}
