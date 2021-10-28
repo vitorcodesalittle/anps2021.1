@@ -9,7 +9,7 @@ import play.api.mvc._
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.Duration
-import scala.concurrent.{ExecutionContext, Future, Await}
+import scala.concurrent.{ExecutionContext, Await}
 import scala.util.{Success, Failure}
 
 trait PostRequestHeader extends MessagesRequestHeader with PreferredMessagesProvider
@@ -40,7 +40,7 @@ class UserController @Inject()(repo: UserRepositoryBDR, val controllerComponents
 
   def login(): Action[AnyContent] = Action { implicit request => {
     val loginData = loginForm.bindFromRequest.get
-    val userFuture = repo getByEmail (loginData.email)
+    val userFuture = repo.getByEmail(loginData.email).filter(verifyPassword(_, loginData.password))
     val maybeUser = Await.ready(userFuture, Duration.Inf).value.get
     Ok(maybeUser match {
       case Success(u) => Json.toJson(u) // @TODO: proper redirect
@@ -69,7 +69,7 @@ class UserController @Inject()(repo: UserRepositoryBDR, val controllerComponents
 
   def verifyPasswordStrength(password: String): Int = password.length
 
-  def verifyPassword(user: User, password: String): Future[Boolean] = ???
+  def verifyPassword(user: User, password: String): Boolean = user.passwordHash == password
 
 }
 
