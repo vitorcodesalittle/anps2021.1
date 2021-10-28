@@ -9,7 +9,7 @@ import play.api.mvc._
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.Duration
-import scala.concurrent.{ExecutionContext, Await}
+import scala.concurrent.{ExecutionContext, Future, Await}
 import scala.util.{Success, Failure}
 
 trait PostRequestHeader extends MessagesRequestHeader with PreferredMessagesProvider
@@ -40,11 +40,17 @@ class UserController @Inject()(repo: UserRepositoryBDR, val controllerComponents
 
   def login(): Action[AnyContent] = Action { implicit request => {
     val loginData = loginForm.bindFromRequest.get
-    val userFuture = repo.getByEmail(loginData.email).filter(verifyPassword(_, loginData.password))
+    val userFuture = for {
+      user <- repo getByEmail loginData.email
+      validPassword <- verifyPassword(user, loginData.password)
+      if validPassword
+    } yield user
     val maybeUser = Await.ready(userFuture, Duration.Inf).value.get
     Ok(maybeUser match {
       case Success(u) => Json.toJson(u) // @TODO: proper redirect
-      case Failure(_) => Json.toJson(Map("message" -> "Invalid username or password"))
+      case Failure(_) => {
+        Json.toJson(Map("message" -> "invalid email or password"))
+      }
     }).as("application/json")
   }
   }
@@ -67,9 +73,14 @@ class UserController @Inject()(repo: UserRepositoryBDR, val controllerComponents
 
   def genSalt(): String = "" // @TODO
 
-  def verifyPasswordStrength(password: String): Int = password.length
+  def verifyPasswordStrength(password: String): Int = password.length // @TODO
 
-  def verifyPassword(user: User, password: String): Boolean = user.passwordHash == password
+  def verifyPassword(user: User, password: String): Future[Boolean] = Future {
+    user.passwordHash match {
+      case Some(hashed) => hashed == password
+      case None => false
+    }
+  }
 
 }
 
