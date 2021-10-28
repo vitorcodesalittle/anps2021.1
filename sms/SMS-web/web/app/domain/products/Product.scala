@@ -1,3 +1,3 @@
 package domain.products
 
-case class Product()
+case class Product(id: Int, name String, price: Int, stock: Int)
