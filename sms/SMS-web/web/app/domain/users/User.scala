@@ -7,4 +7,7 @@ case class User(
                  passwordHash: Option[String],
                  passwordSalt: Option[String],
                  emailVerified: Option[Boolean] = Some(false)
-               )
+               ) {
+}
+
+
