@@ -12,8 +12,6 @@ import scala.concurrent.duration.Duration
 import scala.concurrent.{ExecutionContext, Future, Await}
 import scala.util.{Success, Failure}
 
-trait PostRequestHeader extends MessagesRequestHeader with PreferredMessagesProvider
-
 @Singleton
 class UserController @Inject()(repo: UserRepositoryBDR, val controllerComponents: ControllerComponents)
                               (implicit ec: ExecutionContext) extends BaseController with play.api.i18n.I18nSupport {
@@ -38,35 +36,37 @@ class UserController @Inject()(repo: UserRepositoryBDR, val controllerComponents
     Ok(views.html.user(signUpForm, loginForm))
   }
 
-  def login(): Action[AnyContent] = Action { implicit request => {
-    val loginData = loginForm.bindFromRequest.get
-    val userFuture = for {
-      user <- repo getByEmail loginData.email
-      validPassword <- verifyPassword(user, loginData.password)
-      if validPassword
-    } yield user
-    val maybeUser = Await.ready(userFuture, Duration.Inf).value.get
-    Ok(maybeUser match {
-      case Success(u) => Json.toJson(u) // @TODO: proper redirect
-      case Failure(_) => {
-        Json.toJson(Map("message" -> "invalid email or password"))
-      }
-    }).as("application/json")
-  }
-  }
-
-  def signUp(): Action[AnyContent] = Action { implicit request => {
-    val signUpData = signUpForm.bindFromRequest.get
-    val passwordStrength = verifyPasswordStrength(signUpData.password)
-    if (passwordStrength < 6) {
-      BadRequest(Json.toJson(Map("message" -> "Password is too weak")))
-    } else {
-      // @TODO: validation
-      val user = User(id = None, email = signUpData.email, name = signUpData.name, passwordHash = Some(hashPassword(signUpData.password)), passwordSalt = Some(genSalt()))
-      val savedUser = Await.result(repo.create(user), Duration.Inf) // @TODO: Duration.Inf ???
-      Ok(Json.toJson(savedUser)).as("application/json")
+  def login(): Action[AnyContent] = Action {
+    implicit request => {
+      val loginData = loginForm.bindFromRequest.get
+      val userFuture = for {
+        user <- repo getByEmail loginData.email
+        validPassword <- verifyPassword(user, loginData.password)
+        if validPassword
+      } yield user
+      val maybeUser = Await.ready(userFuture, Duration.Inf).value.get
+      Ok(maybeUser match {
+        case Success(u) => Json.toJson(u) // @TODO: proper redirect
+        case Failure(_) => {
+          Json.toJson(Map("message" -> "invalid email or password"))
+        }
+      }).as("application/json")
     }
   }
+
+  def signUp(): Action[AnyContent] = Action {
+    implicit request => {
+      val signUpData = signUpForm.bindFromRequest.get
+      val passwordStrength = verifyPasswordStrength(signUpData.password)
+      if (passwordStrength < 6) {
+        BadRequest(Json.toJson(Map("message" -> "Password is too weak")))
+      } else {
+        // @TODO: validation
+        val user = User(id = None, email = signUpData.email, name = signUpData.name, passwordHash = Some(hashPassword(signUpData.password)), passwordSalt = Some(genSalt()))
+        val savedUser = Await.result(repo.create(user), Duration.Inf) // @TODO: Duration.Inf ???
+        Ok(Json.toJson(savedUser)).as("application/json")
+      }
+    }
   }
 
   def hashPassword(str: String): String = str // @TODO

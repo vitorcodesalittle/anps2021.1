@@ -13,7 +13,7 @@ class ProductRepositoryList()(implicit val ec: ExecutionContext) extends Product
 
 
   def getOrThrow(fn: (Product => Boolean)): Future[Product] = Future {
-    products filter fn match {
+    (products filter fn) match {
       case x :: xs => x
       case Nil => throw new ProductNotFoundException
     }

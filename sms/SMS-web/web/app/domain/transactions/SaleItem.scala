@@ -1,5 +1,7 @@
 package domain.transactions
 
-class SaleItem {
+import domain.products.Product
 
+case class SaleItem(product: Product, quantity: Int) {
+  def price: Double = product.salePrice * quantity
 }

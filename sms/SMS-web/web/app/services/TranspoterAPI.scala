@@ -13,7 +13,7 @@ object Transporter {
 }
 
 sealed trait TransporterApi {
-  def getTransporters: Future[List[Transporter]] = ???
+  def getTransporters: Future[List[Transporter]]
 
-  def getDeliveryCost(address: Address, method: DeliveryMethod): Future[Double] = ???
+  def getDeliveryCost(address: Address, method: DeliveryMethod): Future[Double]
 }
