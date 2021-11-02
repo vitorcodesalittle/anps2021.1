@@ -25,19 +25,28 @@ class ProductController @Inject()(repo: ProductRepositoryList, val controllerCom
   )
 
   def createProduct: Action[AnyContent] = Action {
-    val product: Product = Product(1, "asdasd", 123, 123)
-    val future = Await.ready(repo.create(product), Duration.Inf)
-    val t = future.value.get
-    t match {
-      case Success(p) => Ok(Json.toJson(p))
-      case Failure(e) => InternalServerError(e.toString) // don't do this
+    implicit request => {
+      val productDataForm = productForm.bindFromRequest()
+      println(productDataForm)
+      println(productDataForm.errors)
+      val productData = productDataForm.get
+      println(productData)
+      val product = Product(None, productData.name, productData.suggestedPrice, productData.stock, productData.barcode)
+      val future = Await.ready(repo.create(product), Duration.Inf)
+      val t = future.value.get
+      t match {
+        case Success(p) => Ok(Json.toJson(p))
+        case Failure(e) => InternalServerError(e.toString) // don't do this
+      }
     }
   }
 
   def getProducts: Action[AnyContent] = Action {
-    Await.ready(repo.getAll(), Duration.Inf).value.get match {
-      case Success(t) => Ok(Json.toJson(t))
-      case Failure(_) => InternalServerError("Failed to get products")
+    implicit request => {
+      Await.ready(repo.getAll(), Duration.Inf).value.get match {
+        case Success(products) => Ok(views.html.products(products, productForm))
+        case Failure(_) => InternalServerError("Failed to get products")
+      }
     }
   }
 
