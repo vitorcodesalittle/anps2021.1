@@ -1,16 +1,18 @@
 package domain.products
 
-import domain.products.exceptions.ProductExceptions.{ProductNotFoundException, ProductNameNotAllowedException}
+import domain.products.exceptions.ProductExceptions.{ProductNameNotAllowedException, ProductNotFoundException}
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.Duration
-import scala.concurrent.{ExecutionContext, Future, Await}
-import scala.util.{Success, Failure}
+import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.util.{Failure, Success}
 
 @Singleton
-class ProductRepositoryList()(implicit val ec: ExecutionContext) extends ProductRepository {
+class ProductRepositoryList @Inject()(implicit val ec: ExecutionContext) extends ProductRepository {
 
   var products: List[Product] = List()
 
+  override def getById(id: Int): Future[Product] = getOrThrow(product => product.id == id)
 
   def getOrThrow(fn: (Product => Boolean)): Future[Product] = Future {
     (products filter fn) match {
@@ -18,10 +20,6 @@ class ProductRepositoryList()(implicit val ec: ExecutionContext) extends Product
       case Nil => throw new ProductNotFoundException
     }
   }
-
-  override def getByName(name: String): Future[Product] = getOrThrow(product => product.name == name)
-
-  override def getById(id: Int): Future[Product] = getOrThrow(product => product.id == id)
 
   override def getAll(): Future[Seq[Product]] = Future {
     products
@@ -40,6 +38,8 @@ class ProductRepositoryList()(implicit val ec: ExecutionContext) extends Product
       }
     }
   }
+
+  override def getByName(name: String): Future[Product] = getOrThrow(product => product.name == name)
 
   def exists(thing: Product): Future[Boolean] = Future {
     products.exists(product => product.name == thing.name)

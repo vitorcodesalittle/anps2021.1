@@ -38,7 +38,7 @@ class UserController @Inject()(repo: UserRepositoryBDR, val controllerComponents
 
   def login(): Action[AnyContent] = Action {
     implicit request => {
-      val loginData = loginForm.bindFromRequest.get
+      val loginData = loginForm.bindFromRequest().get
       val userFuture = for {
         user <- repo getByEmail loginData.email
         validPassword <- verifyPassword(user, loginData.password)

@@ -1,3 +1,3 @@
 package domain.products.forms
 
-case class ProductData(name: String, stock: Double, suggestedPrice: Double, barcode: String)
+case class ProductData(name: String, stock: Int, suggestedPrice: Int, barcode: String)

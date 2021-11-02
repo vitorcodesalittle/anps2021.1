@@ -14,14 +14,14 @@ import scala.util.{Success, Failure}
 
 class ProductController @Inject()(repo: ProductRepositoryList, val controllerComponents: ControllerComponents)(implicit ec: ExecutionContext) extends BaseController with play.api.i18n.I18nSupport {
 
-  implicit val userWrites: OWrites[Product] = Json.writes[Product]
+  implicit val productWrites: OWrites[Product] = Json.writes[Product]
   val productForm: Form[ProductData] = Form(
     mapping(
-      "name" -> text,
-      "stock" -> number,
-      "suggestedPrice" -> number,
-      "barcode" -> text
-    )(ProductData.apply, ProductData.unapply)
+      "name" -> text(minLength = 1),
+      "stock" -> number(min = 0),
+      "suggestedPrice" -> number(min = 0),
+      "barcode" -> text(minLength = 1),
+    )(ProductData.apply)(ProductData.unapply)
   )
 
   def createProduct: Action[AnyContent] = Action {
