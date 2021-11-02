@@ -14,5 +14,5 @@ trait TransactionRepository {
 
   def createPurchase(purchase: Purchase): Future[Purchase]
 
-  def deleteSale(saleId: Int): Future[Sale]
+  def deleteSale(saleId: Int): Future[Int]
 }

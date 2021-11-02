@@ -1,7 +1,7 @@
 package domain.transactions
 
-import scala.concurrent.{ExecutionContext, Future}
 import java.time.LocalDateTime
+import scala.concurrent.{ExecutionContext, Future}
 
 class TransactionRepositoryList()(implicit val executionContext: ExecutionContext) extends TransactionRepository {
   private var transactions: Seq[Transaction] = Seq()
@@ -30,7 +30,7 @@ class TransactionRepositoryList()(implicit val executionContext: ExecutionContex
     purchase
   }
 
-  override def deleteSale(saleId: Int): Future[Sale] = Future {
+  override def deleteSale(saleId: Int): Future[Int] = Future {
     transactions = transactions filter {
       (tr: Transaction) =>
         tr match {
@@ -38,6 +38,6 @@ class TransactionRepositoryList()(implicit val executionContext: ExecutionContex
           case _ => true
         }
     }
-    transactions
+    1
   }
 }

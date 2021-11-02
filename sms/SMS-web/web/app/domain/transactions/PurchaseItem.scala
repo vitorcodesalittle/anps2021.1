@@ -2,6 +2,6 @@ package domain.transactions
 
 import domain.products.Product
 
-case class PurchaseItem(override val product: Product, override val quantity: Int, purchasePrice: Double) extends SaleItem(product, quantity) {
+case class PurchaseItem(product: Product, quantity: Int, purchasePrice: Double) extends Item {
   override def price: Double = purchasePrice * quantity
 }
