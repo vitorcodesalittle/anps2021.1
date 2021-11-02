@@ -14,6 +14,8 @@ libraryDependencies += jdbc
 libraryDependencies += "org.postgresql" % "postgresql" % "42.2.24"
 libraryDependencies += "com.typesafe.play" %% "play-slick" % "5.0.0"
 libraryDependencies += "com.h2database" % "h2" % "1.4.200"
+libraryDependencies += "com.github.t3hnar" %% "scala-bcrypt" % "4.3.0"
+
 // Adds additional packages into Twirl
 //TwirlKeys.templateImports += "br.ufpe.cin.controllers._"
 
