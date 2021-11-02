@@ -1,16 +1,16 @@
 package controllers
 
-import domain.products.{ProductRepositoryList, Product}
 import domain.products.forms.ProductData
+import domain.products.{Product, ProductRepositoryList}
 import play.api.data.Form
-import play.api.data.Forms.{number, mapping, text}
-import play.api.libs.json.{OWrites, Json}
-import play.api.mvc.{Action, ControllerComponents, BaseController, AnyContent}
+import play.api.data.Forms.{mapping, number, text}
+import play.api.libs.json.{Json, OWrites}
+import play.api.mvc.{Action, AnyContent, BaseController, ControllerComponents}
 
 import javax.inject.Inject
 import scala.concurrent.duration.Duration
-import scala.concurrent.{ExecutionContext, Await}
-import scala.util.{Success, Failure}
+import scala.concurrent.{Await, ExecutionContext}
+import scala.util.{Failure, Success}
 
 class ProductController @Inject()(repo: ProductRepositoryList, val controllerComponents: ControllerComponents)(implicit ec: ExecutionContext) extends BaseController with play.api.i18n.I18nSupport {
 
@@ -31,6 +31,13 @@ class ProductController @Inject()(repo: ProductRepositoryList, val controllerCom
     t match {
       case Success(p) => Ok(Json.toJson(p))
       case Failure(e) => InternalServerError(e.toString) // don't do this
+    }
+  }
+
+  def getProducts: Action[AnyContent] = Action {
+    Await.ready(repo.getAll(), Duration.Inf).value.get match {
+      case Success(t) => Ok(Json.toJson(t))
+      case Failure(_) => InternalServerError("Failed to get products")
     }
   }
 
