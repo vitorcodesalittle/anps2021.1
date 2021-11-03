@@ -4,7 +4,7 @@ No contexto de uma loja genérica, queremos criar uma aplicação que permita.
 - Gerenciar matéria prima que é comprada
 - Visualizar o fluxo de caixa do negócio
 
-![Use Cases](./use-cases.png)
+![Use Cases](./docs/use-cases.png)
 
 A implementação pode ser encontrada em [SMS-web](./SMS-web/)
 
