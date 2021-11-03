@@ -2,8 +2,8 @@ package controllers
 
 import model.Boundary
 import model.services.session.UserAction
+import model.users.User
 import model.users.forms.{LoginData, SignUpData}
-import model.users.{User, UserJson}
 import play.api.data.Form
 import play.api.data.Forms.{mapping, text}
 import play.api.libs.json._
@@ -17,8 +17,7 @@ import scala.util.{Failure, Success, Try}
 class UserController @Inject()(val controllerComponents: ControllerComponents, boundary: Boundary, userAction: UserAction)
                               (implicit ec: ExecutionContext)
   extends BaseController
-    with play.api.i18n.I18nSupport
-    with UserJson {
+    with play.api.i18n.I18nSupport {
 
   val signUpForm: Form[SignUpData] = Form(
     mapping(
