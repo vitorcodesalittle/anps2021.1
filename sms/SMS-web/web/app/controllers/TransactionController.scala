@@ -1,7 +1,7 @@
 package controllers
 
 import akka.http.scaladsl.model.DateTime
-import domain.transactions.{Sale, TransactionRepositoryList}
+import model.transactions.{Sale, TransactionRepositoryList}
 import play.api.mvc.{Action, ControllerComponents, BaseController, AnyContent}
 
 import javax.inject.Inject

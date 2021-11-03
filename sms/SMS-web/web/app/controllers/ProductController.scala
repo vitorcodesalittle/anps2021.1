@@ -1,7 +1,7 @@
 package controllers
 
-import domain.products.forms.ProductData
-import domain.products.{Product, ProductRepositoryList}
+import model.products.forms.ProductData
+import model.products.{Product, ProductRepositoryList}
 import play.api.data.Form
 import play.api.data.Forms.{mapping, number, text}
 import play.api.libs.json.{Json, OWrites}
