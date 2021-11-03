@@ -1,4 +1,4 @@
-package services
+package services.encryption
 
 import com.github.t3hnar.bcrypt._
 

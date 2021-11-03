@@ -1,12 +1,13 @@
 package controllers
 
 import domain.users.forms.{LoginData, SignUpData}
-import domain.users.{User, UserRepositoryBDR}
+import domain.users.{User, UserJson, UserRepositoryBDR}
 import play.api.data.Form
 import play.api.data.Forms.{mapping, text}
 import play.api.libs.json._
 import play.api.mvc._
-import services.EncryptionService
+import services.encryption.EncryptionService
+import services.session.{SessionService, UserAction, UserInfo}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.Duration
@@ -14,9 +15,8 @@ import scala.concurrent.{Await, ExecutionContext}
 import scala.util.{Failure, Success, Try}
 
 @Singleton
-class UserController @Inject()(repo: UserRepositoryBDR, val controllerComponents: ControllerComponents, encryptionService: EncryptionService)
-                              (implicit ec: ExecutionContext) extends BaseController with play.api.i18n.I18nSupport {
-  implicit val userWrites: OWrites[User] = Json.writes[User]
+class UserController @Inject()(repo: UserRepositoryBDR, val controllerComponents: ControllerComponents, userAction: UserAction, sessionService: SessionService, encryptionService: EncryptionService)
+                              (implicit ec: ExecutionContext) extends BaseController with play.api.i18n.I18nSupport with UserJson {
 
   val signUpForm: Form[SignUpData] = Form(
     mapping(
@@ -41,17 +41,25 @@ class UserController @Inject()(repo: UserRepositoryBDR, val controllerComponents
     implicit request => {
       val loginData = loginForm.bindFromRequest().get
       val userFuture = repo getByEmail loginData.email
-      val user = for {
+      val userTry = for {
         u <- Await.ready(userFuture, Duration.Inf).value.get
         validUser <- verifyPassword(u, loginData.password)
         if validUser
       } yield u
-      Ok(user match {
-        case Success(u) => Json.toJson(u) // @TODO: proper redirect
-        case Failure(_) => {
-          Json.toJson(Map("message" -> "invalid email or password"))
+      userTry match {
+        case Success(User(Some(id), _, _, _, _, _)) => {
+          val authCookie = sessionService.encodeUserSession(UserInfo(id))
+          println("Sending cookie ", authCookie)
+          Redirect("/testauth").withCookies(authCookie)
         }
-      }).as("application/json")
+        case Success(_) => {
+          InternalServerError("Could not get user")
+        }
+        case Failure(e) => {
+          println(e)
+          InternalServerError("Try again later")
+        }
+      }
     }
   }
 
@@ -90,6 +98,12 @@ class UserController @Inject()(repo: UserRepositoryBDR, val controllerComponents
   def genSalt(): String = encryptionService.genSalt
 
   def verifyPasswordStrength(password: String): Int = password.length // @TODO
+
+  def testAuth(): Action[AnyContent] = userAction {
+    implicit request => {
+      Ok("You are authenticated!")
+    }
+  }
 
 }
 
