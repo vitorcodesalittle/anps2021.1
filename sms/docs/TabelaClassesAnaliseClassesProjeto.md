@@ -1,16 +1,38 @@
+35 classes
 # [WIP] Mapemanto de Classes de Análise para Elementos de Project
-| Classes de Análise | Elementos de Projeto | Reason |
-|--------------------|----------------------|--------|
-| User               | Store, User          | [1](./TabelaClassesAnaliseClassesProjeto.md#1)       |
-| UserController     | UserController, StoreController| [1] |
-| UserCollection     | UserCollection, UserRepository, UserRepositoryRDB, StoreRepository, StoreRepositoryRDB||
-| ProductCollection  | ProductCollection, ProductRepository, ProductRepositoryRDB ||
-| TransactionCollection | TransactionCollection, TransactionRepository, TransactionRepositoryRDB ||
-| Sale                  | Sale, Address     | [2](.TabelaClassesAnaliseClassesProjeto.md#2)|
 
+| Classes de Análise    | Elementos de Projeto                                                      | Reason                                        |
+|-----------------------|---------------------------------------------------------------------------|-----------------------------------------------|
+| EncryptionService     | EncryptionService                                                         |                                               | 1
+| SessionService        | SessionService, UserAction, UserRequest, UserInfo                         |                                               | 5
+| Correios              | TransporterService, TransporterInterface                                  |abstrai a lógica de cálculo de frete           | 7
+| UserControl           | UserControl, UserController                                               |                                               | 9
+| User                  | User                                                                      |                                               | 10
+| UserCollection        | UserCollection, UserRepository, UserRepositoryRDB                         |                                               | 13
+| StoreControl          | StoreControl                                                              |                                               | 14
+| Store                 | Store                                                                     |                                               | 15
+| StoreCollection       | StoreCollection, StoreRepository, StoreRepositoryRDB                      |                                               | 18
+| Product               | Product                                                                   |                                               | 19
+| ProductControl        | ProductControl, ProductController                                         |                                               | 21
+| ProductCollection     | ProductCollection, ProductRepository, ProductRepositoryRDB                |                                               | 24
+| Sale                  | Sale                                                                      |                                               | 25
+| Address               | Address                                                                   |                                               | 26
+| AuthScreen            | AuthScreen                                                                |                                               | 27
+| TransactionScreen     | TransactionScreen                                                         |                                               | 28
+| ProductScreen         | ProductScreen                                                             |                                               | 29
+| TransactionCollection | TransactionCollection, TransactionRepository, TransactionRepositoryRDB    |                                               | 32
+| Boundary              |                                                                           |                                               | 33
+| Purchase              | Purchase                                                                  |                                               | 34
+| Item                  | Item                                                                      |                                               | 35
+ 
 
-## 1
-Decidi quebrar a classe de User em User e Store pensando que no futuro, um usuário poderia ter várias lojas, e uma loja poderia ser gerenciada por vários usuários.
+## 0 - Padrão Arquitetural MVC
+As seguintes classes foram adicionados para que o projeto siga um padrão MVC:
+- Classes Controller
+Responsáveis pela interação entre as views (páginas HTML) com o model (o modelo de negócio)
+- Classes Repository
+Responsáveis pela persistência das entidades
+- UserAction
+Especificamente porque uso Play como framework, a classe UserAction extende uma Action
+do play com a decodificação de um token JWTo forma de mecanismo de reforçar o controle de acesso.
 
-## 2
-A informação de endereço parece ser reutilizável em outros contextos.
