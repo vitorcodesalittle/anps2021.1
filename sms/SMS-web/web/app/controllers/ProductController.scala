@@ -27,10 +27,7 @@ class ProductController @Inject()(repo: ProductRepositoryList, val controllerCom
   def createProduct: Action[AnyContent] = Action {
     implicit request => {
       val productDataForm = productForm.bindFromRequest()
-      println(productDataForm)
-      println(productDataForm.errors)
       val productData = productDataForm.get
-      println(productData)
       val product = Product(None, productData.name, productData.suggestedPrice, productData.stock, productData.barcode)
       val future = Await.ready(repo.create(product), Duration.Inf)
       val t = future.value.get

@@ -16,7 +16,10 @@ import scala.util.{Failure, Success, Try}
 
 @Singleton
 class UserController @Inject()(repo: UserRepositoryBDR, val controllerComponents: ControllerComponents, userAction: UserAction, sessionService: SessionService, encryptionService: EncryptionService)
-                              (implicit ec: ExecutionContext) extends BaseController with play.api.i18n.I18nSupport with UserJson {
+                              (implicit ec: ExecutionContext)
+  extends BaseController
+    with play.api.i18n.I18nSupport
+    with UserJson {
 
   val signUpForm: Form[SignUpData] = Form(
     mapping(
@@ -52,12 +55,12 @@ class UserController @Inject()(repo: UserRepositoryBDR, val controllerComponents
           println("Sending cookie ", authCookie)
           Redirect("/testauth").withCookies(authCookie)
         }
-        case Success(_) => {
+        case notAUser => {
+          if (notAUser.isFailure) {
+            val Failure(exception) = notAUser
+            println(exception)
+          }
           InternalServerError("Could not get user")
-        }
-        case Failure(e) => {
-          println(e)
-          InternalServerError("Try again later")
         }
       }
     }
