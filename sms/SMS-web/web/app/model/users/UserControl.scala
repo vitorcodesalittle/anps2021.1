@@ -2,17 +2,18 @@ package model.users
 
 import model.services.encryption.EncryptionService
 import model.services.session.{SessionService, UserInfo}
+import model.store.{Store, StoreRepositoryRDB}
 import model.users.exceptions.UserExceptions.PasswordTooWeakException
 import model.users.forms.{LoginData, SignUpData}
 import play.api.mvc.Cookie
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.Await
 import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, ExecutionContext}
 import scala.util.{Failure, Success, Try}
 
 @Singleton
-class UserControl @Inject()(repo: UserRepositoryBDR, sessionService: SessionService, encryptionService: EncryptionService) {
+class UserControl @Inject()(repo: UserRepositoryBDR, storeRepo: StoreRepositoryRDB, sessionService: SessionService, encryptionService: EncryptionService)(implicit val ec: ExecutionContext) {
 
   def login(loginData: LoginData): Try[(User, Cookie)] = {
     val userFuture = repo getByEmail loginData.email
@@ -33,7 +34,12 @@ class UserControl @Inject()(repo: UserRepositoryBDR, sessionService: SessionServ
       Failure(new PasswordTooWeakException)
     } else {
       val user = User(id = None, email = signUpData.email, name = signUpData.name, passwordHash = None)
-      Await.ready(repo.create(user, signUpData.password), Duration.Inf).value.get // @TODO: Duration.Inf ???
+      val savedUser = for {
+        savedUser ← repo.create(user, signUpData.password)
+        _ ← storeRepo.create(Store(id = None, name = signUpData.storeData.name, savedUser.id.getOrElse(-1)))
+      } yield savedUser
+      Await.ready(savedUser, Duration.Inf)
+      savedUser.value.get
     }
   }
 

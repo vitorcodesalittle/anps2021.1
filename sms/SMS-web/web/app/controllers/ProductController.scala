@@ -37,7 +37,7 @@ class ProductController @Inject()(boundary: Boundary, val controllerComponents: 
 
   def getProducts: Action[AnyContent] = Action {
     implicit request => {
-      val productsTry: Try[Seq[Product]] = boundary.getAllProducts()
+      val productsTry: Try[Seq[Product]] = boundary.getAllProducts
       productsTry match {
         case Success(products) => Ok(views.html.products(products, productForm))
         case Failure(_) => InternalServerError("Failed to get products")

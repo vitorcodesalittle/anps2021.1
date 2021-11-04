@@ -1,4 +1,6 @@
 package model.users.forms
 
-case class SignUpData(name: String, email: String, password: String)
+import model.store.forms.StoreData
+
+case class SignUpData(name: String, email: String, password: String, storeData: StoreData)
 

@@ -2,10 +2,11 @@ package controllers
 
 import model.Boundary
 import model.services.session.UserAction
+import model.store.forms.StoreData
 import model.users.User
 import model.users.forms.{LoginData, SignUpData}
 import play.api.data.Form
-import play.api.data.Forms.{mapping, text}
+import play.api.data.Forms.{mapping, of, text}
 import play.api.libs.json._
 import play.api.mvc._
 
@@ -24,6 +25,7 @@ class UserController @Inject()(val controllerComponents: ControllerComponents, b
       "name" -> text(minLength = 1),
       "email" -> text(minLength = 1),
       "password" -> text,
+      "storeName" → of[StoreData]
     )(SignUpData.apply)(SignUpData.unapply)
   )
 

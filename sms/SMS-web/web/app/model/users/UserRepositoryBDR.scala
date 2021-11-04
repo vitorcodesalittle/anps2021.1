@@ -2,8 +2,11 @@ package model.users
 
 import model.services.encryption.EncryptionService
 import play.api.db.slick.DatabaseConfigProvider
-import slick.jdbc.JdbcProfile
+import slick.basic.DatabaseConfig
+import slick.jdbc.PostgresProfile
+import slick.jdbc.PostgresProfile.api._
 import slick.jdbc.meta.MTable
+import slick.lifted.TableQuery
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.Duration
@@ -12,36 +15,9 @@ import scala.util.{Failure, Success}
 
 @Singleton
 class UserRepositoryBDR @Inject()(encryptionService: EncryptionService, dbConfigProvider: DatabaseConfigProvider, implicit val ec: ExecutionContext) extends UserRepository {
-  protected val dbConfig = dbConfigProvider.get[JdbcProfile]
-
-  import dbConfig._
-  import profile.api._
-
-  class Users(tag: Tag) extends Table[User](tag, "USERS") {
-    def * = (id.?, name, email, passwordHash.?, emailVerified.?) <> (User.tupled, User.unapply)
-
-    def id = column[Int]("ID", O.PrimaryKey, O.AutoInc)
-
-    def name = column[String]("NAME", O.Length(256))
-
-    def email = column[String]("EMAIL", O.Length(256))
-
-    def emailVerified = column[Boolean]("EMAIL_VERIFIED", O.Default(true))
-
-    private def passwordHash = column[String]("PASSWORD_HASH")
-
-    private def passwordSalt = column[String]("PASSWORD_SALT")
-  }
-
+  val dbConfig: DatabaseConfig[PostgresProfile] = dbConfigProvider.get[PostgresProfile]
+  val db = dbConfig.db
   val users = TableQuery[Users]
-
-  val existing = db.run(MTable.getTables)
-  val f = existing.flatMap(v => {
-    val names = v.map(mt => mt.name.name)
-    val createIfNotExist = List(users).filter(table =>
-      (!names.contains(table.baseTableRow.tableName))).map(_.schema.create)
-    db.run(DBIO.sequence(createIfNotExist))
-  })
 
   def getAll(): Future[Seq[User]] = db run users.result
 
@@ -51,15 +27,21 @@ class UserRepositoryBDR @Inject()(encryptionService: EncryptionService, dbConfig
         val userWithPassword = user.copy(passwordHash = Some(hashedPassword))
         (users returning users.map(_.id) into ((_, newId) => user.copy(id = Some(newId)))) += userWithPassword
       }
-      case Failure(other) ⇒ throw new RuntimeException("Failed to hash password")
+      case Failure(e) ⇒ Future.failed(e)
     }
   }
-
-  Await.result(f, Duration.Inf)
 
   override def getByEmail(email: String): Future[User] = db.run {
     users.filter(user => user.email === email).result.head
   }
 
-
+  println("Now let's create the users schema")
+  val createSchemaFuture = for {
+    tables ← db.run {
+      MTable.getTables
+    }
+    if !tables.map(_.name.name).contains(users.baseTableRow.tableName)
+    _ ← db.run(DBIO.sequence(Seq(users.schema.create)))
+  } yield true
+  Await.ready(createSchemaFuture, Duration.Inf)
 }
