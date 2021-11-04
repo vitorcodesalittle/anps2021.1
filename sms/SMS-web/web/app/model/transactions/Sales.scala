@@ -10,6 +10,10 @@ class Sales(tag: Tag) extends Table[Sale](tag, "SALES") {
 
   def transaction = foreignKey("TRANSACTION", transactionId, transactions)(_.id)
 
+  def deliveryPrice: Rep[Double] = column[Double]("DELIVERY_PRICE")
+
+  def deliveryMethod: Rep[String] = column[String]("DELIVERY_METHOD")
+
   def addressCEP: Rep[String] = column[String]("ADDRESS_CEP")
 
   def addressStreet: Rep[String] = column[String]("ADDRESS_STREET")
@@ -20,14 +24,16 @@ class Sales(tag: Tag) extends Table[Sale](tag, "SALES") {
 
   def addressExtra: Rep[String] = column[String]("ADDRESS_EXTRA")
 
-  def * = (id.?, transactionId, (addressCEP, addressStreet, addressState, addressCountry, addressExtra)).shaped <> ({
-    case (id, transactionId,  address) ⇒ Sale(id, transactionId, Address.tupled.apply(address))
+  def * = (id.?, transactionId, deliveryMethod, deliveryPrice, (addressCEP, addressStreet, addressState, addressCountry, addressExtra)).shaped <> ( {
+    case (id, transactionId, deliveryMethod, deliveryPrice, address) ⇒ Sale(id, transactionId, deliveryMethod, deliveryPrice, Address.tupled.apply(address))
   }, { s: Sale ⇒ {
     def f1(a: Address) = {
       Address.unapply(a).get
     }
-    Some((s.id, s.transactionId, f1(s.deliveryAddress)))
-  }})
+
+    Some((s.id, s.transactionId, s.deliveryMethod, s.deliveryPrice, f1(s.deliveryAddress)))
+  }
+  })
 
   lazy val transactions = TableQuery[Transactions]
 }

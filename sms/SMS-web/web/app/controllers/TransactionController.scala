@@ -26,7 +26,6 @@ class TransactionController @Inject()(boundary: Boundary, userAction: UserAction
           InternalServerError("Não foi possível registrar venda. Tente mais tarde")
         }
       }
-
     }
   }
 
@@ -43,10 +42,10 @@ class TransactionController @Inject()(boundary: Boundary, userAction: UserAction
     }
   }
 
-  def getTransactions: Action[AnyContent] = userAction {
+  def index: Action[AnyContent] = userAction {
     implicit request ⇒ {
       boundary.getTransactions(request.userInfo) match {
-        case Success(transactions) ⇒ Ok(s"$transactions")
+        case Success(transactions) ⇒ Ok(views.html.transactions(transactions))
         case Failure(e) ⇒ {
           println(e)
           InternalServerError("Não foi possível recuperar as transações")

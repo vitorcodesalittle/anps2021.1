@@ -20,9 +20,10 @@ class UserControl @Inject()(repo: UserRepositoryBDR, storeRepo: StoreRepositoryR
     for {
       user <- Await.ready(userFuture, Duration.Inf).value.get
       validUser <- verifyPassword(user, loginData.password)
+      store ← Await.ready(storeRepo.getFromOwner(user.id.get), Duration.Inf).value.get
       if validUser
       authCookie <- user.id match {
-        case Some(id) => Success(sessionService.encodeUserSession(UserInfo(id)))
+        case Some(id) => Success(sessionService.encodeUserSession(UserInfo(id, store.head.id.get)))
         case None => Failure(new RuntimeException())
       }
     } yield (user, authCookie)

@@ -1,3 +1,3 @@
 package model.transactions
 
-case class Purchase(id: Int, transactionId: Int)
+case class Purchase(id: Option[Int], transactionId: Int)

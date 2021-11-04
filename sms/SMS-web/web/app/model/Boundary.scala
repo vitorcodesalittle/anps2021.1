@@ -3,8 +3,8 @@ package model
 import model.products.forms.ProductData
 import model.products.{Product, ProductControl}
 import model.services.session.UserInfo
+import model.transactions._
 import model.transactions.forms.{CacheFlowRequestData, SaleData}
-import model.transactions.{Item, Sale, Transaction, TransactionControl}
 import model.users.forms.{LoginData, SignUpData}
 import model.users.{User, UserControl}
 import play.api.mvc.Cookie
@@ -25,7 +25,7 @@ class Boundary @Inject()(userControl: UserControl, productControl: ProductContro
 
   def login(loginData: LoginData): Try[(User, Cookie)] = userControl.login(loginData)
 
-  def getTransactions(userInfo: UserInfo): Try[Seq[(Transaction, Option[Sale], Option[Transaction], Seq[Item])]] = transactionControl.getTransactions(userInfo)
+  def getTransactions(userInfo: UserInfo): Try[Seq[(Transaction, Option[Sale], Option[Purchase], Seq[(Item, Product)])]] = transactionControl.getTransactions(userInfo)
 
   def doSale(saleData: SaleData, userInfo: UserInfo): Try[(Transaction, Sale, Seq[Item])] = transactionControl.doSale(saleData, userInfo)
 

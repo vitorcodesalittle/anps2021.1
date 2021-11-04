@@ -1,16 +1,19 @@
 package model.transactions
 
-import java.time.LocalDateTime
+import java.time.Instant
 import scala.concurrent.Future
 
 trait TransactionRepository {
-  def getTransactions(since: LocalDateTime, to: LocalDateTime): Future[Seq[Transaction]]
+
+  def getAllTransactions(storeId: Int): Future[Seq[(Transaction, Option[Sale], Option[Purchase], Seq[(Item, Product)])]]
+
+  def getTransactions(storeId: Int, since: Instant, to: Instant): Future[Seq[(Transaction, Option[Sale], Option[Purchase], Seq[Item])]]
 
   def createSale(sale: Sale): Future[Sale]
 
-  def getSales(since: LocalDateTime, to: LocalDateTime): Future[Seq[Sale]]
+  def getSales(since: Instant, to: Instant): Future[Seq[Sale]]
 
-  def getPurchases(since: LocalDateTime, to: LocalDateTime): Future[Seq[Purchase]]
+  def getPurchases(since: Instant, to: Instant): Future[Seq[Purchase]]
 
   def createPurchase(purchase: Purchase): Future[Purchase]
 
