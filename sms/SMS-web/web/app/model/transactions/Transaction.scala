@@ -1,10 +1,5 @@
 package model.transactions
 
-import scala.concurrent.{ExecutionContext, Future}
+import java.time.Instant
 
-abstract class Transaction(id: Int, items: Seq[Item])(implicit val ec: ExecutionContext) {
-  def totalPrice: Future[Double] = Future {
-    items.foldLeft(0.0)((sum, item) => sum + item.price)
-  }
-}
-
+case class Transaction(id: Option[Int], storeId: Int, createdAt: Instant)

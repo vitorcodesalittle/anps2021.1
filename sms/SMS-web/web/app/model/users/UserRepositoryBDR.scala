@@ -19,7 +19,7 @@ class UserRepositoryBDR @Inject()(encryptionService: EncryptionService, dbConfig
   val db = dbConfig.db
   val users = TableQuery[Users]
 
-  def getAll(): Future[Seq[User]] = db run users.result
+  def getAll: Future[Seq[User]] = db run users.result
 
   override def create(user: User, password: String): Future[User] = {
     encryptionService.hashPassword(password, encryptionService.genSalt) match {
@@ -35,7 +35,7 @@ class UserRepositoryBDR @Inject()(encryptionService: EncryptionService, dbConfig
     users.filter(user => user.email === email).result.head
   }
 
-  val createSchemaFuture = for {
+  val createSchemaFuture: Future[Boolean] = for {
     tables ← db.run {
       MTable.getTables
     }

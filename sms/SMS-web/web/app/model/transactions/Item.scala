@@ -1,5 +1,3 @@
 package model.transactions
 
-trait Item {
-  def price: Double
-}
+case class Item(id: Option[Int], transactionId: Int, productId: Int, quantity: Int, price: Double)

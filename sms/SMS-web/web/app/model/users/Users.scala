@@ -1,6 +1,6 @@
 package model.users
 
-import slick.jdbc.MySQLProfile.api._
+import slick.jdbc.PostgresProfile.api._
 import slick.lifted.Tag
 
 class Users(tag: Tag) extends Table[User](tag, "USERS") {

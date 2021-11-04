@@ -1,25 +1,25 @@
-35 classes
+42 classes
 # [WIP] Mapemanto de Classes de Análise para Elementos de Project
 
 | Classes de Análise    | Elementos de Projeto                                                      | Reason                                        |
 |-----------------------|---------------------------------------------------------------------------|-----------------------------------------------|
 | EncryptionService     | EncryptionService                                                         |                                               | 1
-| SessionService        | SessionService, UserAction, UserRequest, UserInfo                         |                                               | 5
+| SessionService        | SessionService, UserAction, UserRequest, UserInfo                         |UserRequest extende uma request normal na medida de 1 UserInfo, decodificado da sessão em uma UserAction (uma ação que precisa de autenticação | 5
 | Correios              | TransporterService, TransporterInterface                                  |abstrai a lógica de cálculo de frete           | 7
 | UserControl           | UserControl, UserController                                               |                                               | 9
 | User                  | User                                                                      |                                               | 10
-| UserCollection        | UserCollection, UserRepository, UserRepositoryRDB                         |                                               | 13
+| UserCollection        | UserCollection, UserRepository, UserRepositoryRDB, Users                  |Users representa a tabela USERS (o msm vale para Products, Stores, ...)| 13
 | StoreControl          | StoreControl                                                              |                                               | 14
 | Store                 | Store                                                                     |                                               | 15
-| StoreCollection       | StoreCollection, StoreRepository, StoreRepositoryRDB                      |                                               | 18
+| StoreCollection       | StoreCollection, StoreRepository, StoreRepositoryRDB, Stores              |                                               | 18
 | Product               | Product                                                                   |                                               | 19
 | ProductControl        | ProductControl, ProductController                                         |                                               | 21
-| ProductCollection     | ProductCollection, ProductRepository, ProductRepositoryRDB                |                                               | 24
+| ProductCollection     | ProductCollection, ProductRepository, ProductRepositoryRDB, Products      |                                               | 24
 | Sale                  | Sale                                                                      |                                               | 25
 | Address               | Address                                                                   |                                               | 26
-| AuthScreen            | AuthScreen                                                                |                                               | 27
+| AuthScreen            | AuthScreen, LoginData, SignUpData, StoreData                              | as classes data representam a informação de foms da tela| 27
 | TransactionScreen     | TransactionScreen                                                         |                                               | 28
-| ProductScreen         | ProductScreen                                                             |                                               | 29
+| ProductScreen         | ProductScreen, ProductData                                                |                                               | 29
 | TransactionCollection | TransactionCollection, TransactionRepository, TransactionRepositoryRDB    |                                               | 32
 | Boundary              |                                                                           |                                               | 33
 | Purchase              | Purchase                                                                  |                                               | 34
