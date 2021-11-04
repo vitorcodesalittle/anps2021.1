@@ -35,7 +35,6 @@ class UserRepositoryBDR @Inject()(encryptionService: EncryptionService, dbConfig
     users.filter(user => user.email === email).result.head
   }
 
-  println("Now let's create the users schema")
   val createSchemaFuture = for {
     tables ← db.run {
       MTable.getTables

@@ -5,6 +5,8 @@ import scala.concurrent.Future
 trait ProductRepository {
   def getAll(): Future[Seq[Product]]
 
+  def getByStoreId(storeId: Int): Future[Seq[Product]]
+
   def getByName(name: String): Future[Product]
 
   def getById(id: Int): Future[Product]
