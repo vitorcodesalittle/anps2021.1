@@ -22,5 +22,5 @@ object StoreData {
     }
   }
 
-  implicit val storeDataFormatter = new StoreDataFormatter
+  implicit val storeDataFormatter: StoreDataFormatter = new StoreDataFormatter
 }

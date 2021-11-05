@@ -1,6 +1,5 @@
 package model.transactions
 
-import model.global.Address
 import model.products.Product
 import play.api.db.slick.DatabaseConfigProvider
 import slick.dbio.DBIO

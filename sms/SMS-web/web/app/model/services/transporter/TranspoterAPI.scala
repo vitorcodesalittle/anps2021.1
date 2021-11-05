@@ -1,6 +1,6 @@
 package model.services.transporter
 
-import model.global.Address
+import model.transactions.Address
 
 import scala.concurrent.Future
 

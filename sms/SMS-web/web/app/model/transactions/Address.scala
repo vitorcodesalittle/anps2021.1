@@ -1,4 +1,4 @@
-package model.global
+package model.transactions
 
 import play.api.libs.json.{Json, Reads}
 

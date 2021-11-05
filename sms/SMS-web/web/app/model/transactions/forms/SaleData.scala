@@ -1,6 +1,6 @@
 package model.transactions.forms
 
-import model.global.Address
+import model.transactions.Address
 import play.api.libs.json.{Json, Reads}
 
 

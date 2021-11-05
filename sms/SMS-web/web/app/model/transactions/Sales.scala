@@ -1,6 +1,5 @@
 package model.transactions
 
-import model.global.Address
 import slick.jdbc.PostgresProfile.api._
 
 class Sales(tag: Tag) extends Table[Sale](tag, "SALES") {
