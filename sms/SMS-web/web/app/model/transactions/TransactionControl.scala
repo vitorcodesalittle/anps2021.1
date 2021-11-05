@@ -4,6 +4,7 @@ import model.products.Product
 import model.services.session.UserInfo
 import model.transactions.forms.{CacheFlowRequestData, SaleData}
 
+import java.time.Instant
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext}
@@ -18,5 +19,14 @@ class TransactionControl @Inject()(repo: TransactionRepositoryRDB, implicit val 
 
   def mountCashFlow(cacheFlowRequestData: CacheFlowRequestData, userInfo: UserInfo): Try[Seq[Option[(Transaction, Seq[Item])]]] = ???
 
-  def doSale(saleData: SaleData, userInfo: UserInfo): Try[(Transaction, Sale, Seq[Item])] = ???
+  def doSale(saleData: SaleData, userInfo: UserInfo): Try[(Transaction, Sale, Seq[Item])] = {
+    val saleFuture = repo.createSaleWithTransaction(
+      Transaction(None, userInfo.storeId, Instant.now),
+      Sale(None, None, saleData.deliveryMethod, 0.0, saleData.deliveryAddress),
+      saleData.transactionData.items
+    )
+    val result = Await.ready(saleFuture, Duration.Inf).value.get
+    println(result)
+    result
+  }
 }

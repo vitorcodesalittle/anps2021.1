@@ -2,8 +2,10 @@ package controllers
 
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice._
-import play.api.test._
 import play.api.test.Helpers._
+import play.api.test._
+
+import scala.concurrent.ExecutionContext
 
 /**
  * Add your spec here.
@@ -12,6 +14,7 @@ import play.api.test.Helpers._
  * For more information, see https://www.playframework.com/documentation/latest/ScalaTestingWithScalaTest
  */
 class HomeControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
+  implicit val executionContext: ExecutionContext = ExecutionContext.global
 
   "HomeController GET" should {
 
@@ -21,7 +24,7 @@ class HomeControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting
 
       status(home) mustBe OK
       contentType(home) mustBe Some("text/html")
-      contentAsString(home) must include ("Welcome to Play")
+      contentAsString(home) must include("Welcome to Play")
     }
 
     "render the index page from the application" in {
@@ -30,7 +33,7 @@ class HomeControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting
 
       status(home) mustBe OK
       contentType(home) mustBe Some("text/html")
-      contentAsString(home) must include ("Welcome to Play")
+      contentAsString(home) must include("Welcome to Play")
     }
 
     "render the index page from the router" in {
@@ -39,7 +42,7 @@ class HomeControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting
 
       status(home) mustBe OK
       contentType(home) mustBe Some("text/html")
-      contentAsString(home) must include ("Welcome to Play")
+      contentAsString(home) must include("Welcome to Play")
     }
   }
 }

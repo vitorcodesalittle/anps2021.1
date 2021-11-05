@@ -24,8 +24,8 @@ class Sales(tag: Tag) extends Table[Sale](tag, "SALES") {
 
   def addressExtra: Rep[String] = column[String]("ADDRESS_EXTRA")
 
-  def * = (id.?, transactionId, deliveryMethod, deliveryPrice, (addressCEP, addressStreet, addressState, addressCountry, addressExtra)).shaped <> ( {
-    case (id, transactionId, deliveryMethod, deliveryPrice, address) ⇒ Sale(id, transactionId, deliveryMethod, deliveryPrice, Address.tupled.apply(address))
+  def * = (id.?, transactionId.?, deliveryMethod, deliveryPrice, (addressCEP, addressStreet, addressState, addressCountry, addressExtra)).shaped <> ( {
+    case (id, transactionId, deliveryMethod, deliveryPrice, address) ⇒ Sale(id, transactionId, deliveryMethod, deliveryPrice, (Address.apply _).tupled.apply(address))
   }, { s: Sale ⇒ {
     def f1(a: Address) = {
       Address.unapply(a).get

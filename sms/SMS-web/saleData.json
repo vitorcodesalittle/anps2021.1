@@ -1,0 +1,19 @@
+{
+	"deliveryAddress": {
+		"country": "Brazil",
+		"state": "Pernambuco",
+		"city": "Recife",
+		"province": "Boa Viagem",
+		"cep": "51120-530"
+	},
+	"deliveryMethod": "CORREIOS",
+	"transactionData": {
+		"items": [
+			{
+				"productId": 1,
+				"quantity": 3,
+				"price": 2
+			}
+		]
+	}
+}
