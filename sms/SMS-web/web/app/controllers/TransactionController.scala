@@ -17,16 +17,11 @@ class TransactionController @Inject()(boundary: Boundary, userAction: UserAction
 
   def doSale: Action[JsValue] = userAction(parse.json) {
     implicit request ⇒ {
-      val eitherErrorOrSaleData = request.body.validate[SaleData] match {
-        case JsSuccess(value, _) ⇒ Right(value)
-        case JsError(errors) ⇒ Left(errors)
-      }
-      eitherErrorOrSaleData match {
-        case Left(errors) ⇒ {
+      request.body.validate[SaleData] match {
+        case JsError(errors) ⇒ {
           BadRequest(Json.obj("message" → JsError.toJson(errors)))
         }
-        case Right(saleData) ⇒ {
-          println(saleData)
+        case JsSuccess(saleData, _) ⇒ {
           boundary.doSale(saleData, request.userInfo) match {
             case Success((transaction, sale, items)) ⇒ Ok(s"Venda registrada $transaction $sale $items")
             case Failure(e) ⇒ {

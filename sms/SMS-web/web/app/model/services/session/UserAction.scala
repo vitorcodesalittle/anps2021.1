@@ -15,7 +15,6 @@ class UserAction @Inject()(val parser: BodyParsers.Default, sessionService: Sess
       validCookie <- validateCookie(cookie)
       decodedCookie <- sessionService.decodeCookie(validCookie.value)
     } yield decodedCookie
-    println(s"Code userInfo $userInfoOption")
     userInfoOption match {
       case Some(userInfo) => block(UserRequest(request, userInfo))
       case None => Future(Redirect("/auth"))
