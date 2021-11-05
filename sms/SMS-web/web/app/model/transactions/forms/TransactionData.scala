@@ -1,4 +1,4 @@
-package model.store.forms
+package model.transactions.forms
 
 import model.transactions.Item
 import play.api.libs.json.{Json, Reads}
