@@ -66,7 +66,7 @@ class UserController @Inject()(val controllerComponents: ControllerComponents, b
         }
         case Failure(e) => {
           println(e)
-          BadRequest(Json.toJson(Map("message" -> "Essa senha é inválida por algum motivo")))
+          BadRequest(Json.obj("message" -> "Essa senha é inválida por algum motivo"))
         }
       }
     }

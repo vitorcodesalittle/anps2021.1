@@ -17,8 +17,6 @@ class TransactionControl @Inject()(repo: TransactionRepositoryRDB, implicit val 
     Await.ready(transactionsFuture, Duration.Inf).value.get
   }
 
-  def mountCashFlow(cacheFlowRequestData: CacheFlowRequestData, userInfo: UserInfo): Try[Seq[Option[(Transaction, Seq[Item])]]] = ???
-
   def doSale(saleData: SaleData, userInfo: UserInfo): Try[(Transaction, Sale, Seq[Item])] = {
     val saleFuture = repo.createSaleWithTransaction(
       Transaction(None, userInfo.storeId, Instant.now),
@@ -27,4 +25,7 @@ class TransactionControl @Inject()(repo: TransactionRepositoryRDB, implicit val 
     )
     Await.ready(saleFuture, Duration.Inf).value.get
   }
+
+  def mountCashFlow(cacheFlowRequestData: CacheFlowRequestData, userInfo: UserInfo): Try[Seq[Option[(Transaction, Seq[Item])]]] = ???
+
 }
