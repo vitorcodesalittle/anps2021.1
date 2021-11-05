@@ -25,8 +25,6 @@ class TransactionControl @Inject()(repo: TransactionRepositoryRDB, implicit val 
       Sale(None, None, saleData.deliveryMethod, 0.0, saleData.deliveryAddress),
       saleData.transactionData.items
     )
-    val result = Await.ready(saleFuture, Duration.Inf).value.get
-    println(result)
-    result
+    Await.ready(saleFuture, Duration.Inf).value.get
   }
 }
