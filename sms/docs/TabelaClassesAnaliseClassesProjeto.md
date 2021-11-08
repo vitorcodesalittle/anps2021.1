@@ -1,5 +1,4 @@
-42 classes
-# [WIP] Mapemanto de Classes de Análise para Elementos de Project
+# Mapemanto de Classes de Análise para Elementos de Project
 
 | Classes de Análise    | Elementos de Projeto                                                      | Reason                                        |
 |-----------------------|---------------------------------------------------------------------------|-----------------------------------------------|
@@ -8,22 +7,23 @@
 | Correios              | TransporterService, TransporterInterface                                  |abstrai a lógica de cálculo de frete           | 7
 | UserControl           | UserControl, UserController                                               |                                               | 9
 | User                  | User                                                                      |                                               | 10
-| UserCollection        | UserCollection, UserRepository, UserRepositoryRDB, Users                  |Users representa a tabela USERS (o msm vale para Products, Stores, ...)| 13
+| UserCollection        | UserRepository, UserRepositoryRDB, Users                  |Users representa a tabela USERS (o msm vale para Products, Stores, ...)| 13
 | StoreControl          | StoreControl                                                              |                                               | 14
 | Store                 | Store                                                                     |                                               | 15
-| StoreCollection       | StoreCollection, StoreRepository, StoreRepositoryRDB, Stores              |                                               | 18
+| StoreCollection       | StoreRepository, StoreRepositoryRDB, Stores              |                                               | 18
 | Product               | Product                                                                   |                                               | 19
 | ProductControl        | ProductControl, ProductController                                         |                                               | 21
-| ProductCollection     | ProductCollection, ProductRepository, ProductRepositoryRDB, Products      |                                               | 24
-| Sale                  | Sale                                                                      |                                               | 25
-| Address               | Address                                                                   |                                               | 26
+| ProductCollection     | ProductRepository, ProductRepositoryRDB, Products      |                                               | 24
+| Sale                  | Sale, Sales, SaleData                                                     |                                               | 25
+| Transaction           | Transaction, Transactions, TransactionData                                |                                               | 26
+| Address               | Address, AddressData                                                       |                                               | 27
 | AuthScreen            | AuthScreen, LoginData, SignUpData, StoreData                              | as classes data representam a informação de foms da tela| 27
 | TransactionScreen     | TransactionScreen                                                         |                                               | 28
 | ProductScreen         | ProductScreen, ProductData                                                |                                               | 29
-| TransactionCollection | TransactionCollection, TransactionRepository, TransactionRepositoryRDB    |                                               | 32
+| TransactionCollection | TransactionRepository, TransactionRepositoryRDB    |                                               | 32
 | Boundary              |                                                                           |                                               | 33
-| Purchase              | Purchase                                                                  |                                               | 34
-| Item                  | Item                                                                      |                                               | 35
+| Purchase              | Purchase, Purchases                                                       |                                               | 34
+| Item                  | Item, Items                                                               |                                               | 35
  
 
 ## 0 - Padrão Arquitetural MVC
