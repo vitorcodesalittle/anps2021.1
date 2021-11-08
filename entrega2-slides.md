@@ -20,9 +20,7 @@ No contexto de uma loja genérica, queremos criar uma aplicação que permita.
 
 ---
 
-# Criação de conta
-
-### Criação de Conta
+# Criação de Conta
 - Atores: Usuário
 - Pré-condição: Nenhuma
 - Pós-condição: Uma conta é registrada
@@ -241,25 +239,34 @@ No contexto de uma loja genérica, queremos criar uma aplicação que permita.
 
 ---
 
-Aqui eu falo sobre a arquitetura MVC
+# Arquitetura (MVC)
+
+- Views
+![height:200px](./sms/docs/arquitetura/1views.png)
+- Controllers
+![height:200px](./sms/docs/arquitetura/2controllers.png)
+
+---
+- Model
+![height:200px](./sms/docs/arquitetura/3services-pkg.png)
+Parão boundary
+![height:200px](./sms/docs/arquitetura/4boundary.png)
 
 ---
 
-Aqui eu falo dos pacotes
+![height:600px](./sms/docs/arquitetura/user.png) ![height:600px](./sms/docs/arquitetura/store.png)
 
 ---
 
-Aqui eu falo sobre os padrões usados
-- Boundary
-- Adapter ???
-- Factory nas entidades a partir de classes do tipo Data (forms/jsons)
+![height:600px](./sms/docs/arquitetura/product.png) ![height:600px](./sms/docs/arquitetura/transaction.png)
+
+---
+
+Subsistema externo
+![height:600px](./sms/docs/arquitetura/9adapter.png)
 
 --- 
 
+**FIM**
 
-Aqui eu falo do subsistema
-
----
-
-
-Aqui eu agradeço e me despeço
+Obrigado!
