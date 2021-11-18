@@ -11,7 +11,7 @@ libraryDependencies += guice
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test
 libraryDependencies += jdbc
 // https://mvnrepository.com/artifact/org.postgresql/postgresql
-libraryDependencies += "org.postgresql" % "postgresql" % "42.2.24"
+libraryDependencies += "org.postgresql" % "postgresql" % "42.3.1"
 libraryDependencies += "com.typesafe.play" %% "play-slick" % "5.0.0"
 libraryDependencies += "com.h2database" % "h2" % "1.4.200"
 libraryDependencies += "com.github.t3hnar" %% "scala-bcrypt" % "4.3.0"
