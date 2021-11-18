@@ -42,7 +42,14 @@ No contexto de uma loja genérica, queremos criar uma aplicação que permita.
 
 # Diagrama de Sequência:
 
-![width:1200px](./sms/docs/analises-casos-de-uso/criar-conta.png)
+![width:1200px](./sms/docs/imgs/signup1.png)
+
+---
+
+
+# Diagrama de Sequência pt 2:
+
+![width:1200px](./sms/docs/imgs/signup2.png)
 
 ---
 
@@ -65,13 +72,13 @@ No contexto de uma loja genérica, queremos criar uma aplicação que permita.
 
 # Diagrama de sequência
 
-![width:1200px](./sms/docs/analises-casos-de-uso/login.png)
+![width:1200px](./sms/docs/imgs/Login.png)
 
 ---
 
 # Visão geral das classes
 
-![height:600px](./sms/docs/analises-casos-de-uso/user-cases-analysis.png)
+![height:600px](./sms/docs/imgs/user-stuff.png)
 
 ---
 
@@ -113,13 +120,13 @@ No contexto de uma loja genérica, queremos criar uma aplicação que permita.
 
 # Diagrama de sequência
 
-![width:1200px](./sms/docs/analises-casos-de-uso/registro-produto.png)
+![width:1200px](./sms/docs/imgs/CreateProduct.png)
 
 ---
 
 # Visão geral das classes
 
-![height:600px](./sms/docs/analises-casos-de-uso/product-cases-analysis.png)
+![height:600px](./sms/docs/imgs/product-stuff.png)
 
 ---
 
@@ -190,7 +197,7 @@ No contexto de uma loja genérica, queremos criar uma aplicação que permita.
 
 # Diagrama de sequência
 
-![width:1200px](./sms/docs/analises-casos-de-uso/registrar-venda.png)
+![width:1200px](./sms/docs/imgs/createsale.png)
 
 ---
 
@@ -229,46 +236,45 @@ No contexto de uma loja genérica, queremos criar uma aplicação que permita.
 
 # Diagrama de sequência
 
-![width:1200px](./sms/docs/analises-casos-de-uso/fluxo-do-caixa.png)
+![width:1200px](./sms/docs/imgs/cashflow.png))
 
 ---
 
 # Visão geral das classes
 
-![height:600px](./sms/docs/analises-casos-de-uso/transaction-cases-analyis.png)
+![height:600px](./sms/docs/imgs/transaction-stuff.png)
 
 ---
 
 # Arquitetura (MVC)
 
-- Views
-![height:200px](./sms/docs/arquitetura/1views.png)
-- Controllers
-![height:200px](./sms/docs/arquitetura/2controllers.png)
+Parão Fachada
+
+![height:500px](./sms/docs/imgs/MVC.png)
 
 ---
-- Model
-![height:200px](./sms/docs/arquitetura/3services-pkg.png)
-Parão boundary
-![height:200px](./sms/docs/arquitetura/4boundary.png)
+# Model
+Pacote User
+![height:500px](./sms/docs/imgs/usr-pkg.png)
 
 ---
-
-![height:600px](./sms/docs/arquitetura/user.png) ![height:600px](./sms/docs/arquitetura/store.png)
-
+Pacote Store
+![height:500px](./sms/docs/imgs/store-pkg.png)
 ---
-
-![height:600px](./sms/docs/arquitetura/product.png) ![height:600px](./sms/docs/arquitetura/transaction.png)
-
+Pacote Produto
+![height:500px](./sms/docs/imgs/product-pkg.png)
 ---
-
-Subsistema externo
-![height:600px](./sms/docs/arquitetura/9adapter.png)
-
---- 
+Pacote Transaction
+![height:500px](./sms/docs/imgs/transaction-pkg.png)
+---
+Pacote Services
+![height:300px](./sms/docs/imgs/services.png)
+---
+Subsistema 
+![height:500px](./sms/docs/imgs/subsystem.png)
+---
 
 [Mapemanto de Classes de Análise para Elementos de Project](https://github.com/vitorcodesalittle/anps2021.1/blob/master/sms/docs/TabelaClassesAnaliseClassesProjeto.md)
-
 ---
 
 **FIM**
