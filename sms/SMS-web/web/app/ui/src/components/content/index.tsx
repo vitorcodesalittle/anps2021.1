@@ -4,7 +4,7 @@ import Navbar from '../navbar'
 const Content: React.FC = function (props) {
   return <div>
     <Navbar/>
-    {props.children || null}
+    {props.children}
   </div>
 }
     

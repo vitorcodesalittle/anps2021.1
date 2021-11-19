@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-
+import Form from '../../components/form'
+import { fail, Schema, success } from '../../pkg/form'
 
 type SignUpDataWithConfirmPassword = SignUpData & {
     confirmPassword: string;
@@ -17,46 +18,105 @@ const defaultSignUpData = (): SignUpDataWithConfirmPassword => ({
   storeName: '',
   confirmPassword: ''
 })
+const LoginSchema: Schema<LoginData> = {
+    email: {
+        type: "text",
+        htmlType: "text",
+        label: "Email",
+        validate: (data, value) => {
+            if (value === "") return fail("Email cannot be empty")
+            return success()
+        },
+        onChange: (data, value) => ({...data, email: value}),
+        order: 0
+    },
+    password: {
+        htmlType: "password",
+        type: "text",
+        label: "Password",
+        validate: (data, value) => {
+            if (value === "") return fail("Password cannot be empty")
+            return success()
+        },
+        onChange: (data, value) => ({...data, password: value}),
+        order: 1
+    }
+}
+
+const SignUpSchema: Schema<SignUpDataWithConfirmPassword> = {
+    email: {
+        type: "text",
+        htmlType: "text",
+        label: "Email",
+        validate: (data, value) => {
+            if (value === "") return fail("Email cannot be empty")
+            return success()
+        },
+        onChange: (data, value) => ({...data, email: value}),
+        order: 0
+    },
+    password: {
+        htmlType: "password",
+        type: "text",
+        label: "Password",
+        validate: (data, value) => {
+            if (value === "") return fail("Password cannot be empty")
+            return success()
+        },
+        onChange: (data, value) => ({...data, password: value}),
+        order: 1
+    },
+    name: {
+        type: "text",
+        htmlType: "text",
+        label: "Name",
+        validate: (data, value) => {
+            if (value === "") return fail("Email cannot be empty")
+            return success()
+        },
+        onChange: (data, value) => ({...data, name: value}),
+        order: 0
+    },
+    storeName: {
+        type: "text",
+        htmlType: "text",
+        label: "Store Name",
+        validate: (data, value) => {
+            if (value === "") return fail("Email cannot be empty")
+            return success()
+        },
+        onChange: (data, value) => ({...data, storeName: value}),
+        order: 0
+    },
+    confirmPassword:{
+        htmlType: "password",
+        type: "text",
+        label: "Confirm Password",
+        validate: (data, value) => {
+            if (value !== data.password) return fail("'Password' and 'Confirm Password' are not equals")
+            return success()
+        },
+        onChange: (data, value) => ({...data, confirmPassword: value}),
+        order: 1
+    }
+}
 
 function Auth() {
-  const [loginData, setLoginData] = useState<LoginData>(defaultLoginData())
   const [signUpData, setSignUpData] = useState<SignUpDataWithConfirmPassword>(defaultSignUpData())
-  const handleLogin: React.FormEventHandler<HTMLFormElement> = (event) => {
-    event.preventDefault()
+  const handleLogin = (loginData: LoginData) => {
     console.log(loginData)
   }
-  const handleCreateAccount: React.FormEventHandler<HTMLFormElement> = (event) => {
-    event.preventDefault()
+  const handleCreateAccount = (signUpData: SignUpDataWithConfirmPassword) => {
     console.log(signUpData)
   }
-  const changeLoginData = (partial: Partial<LoginData>) => setLoginData({...loginData, ...partial})
-  const changeSignUpData  = (partial: Partial<SignUpDataWithConfirmPassword>) => setSignUpData({...signUpData, ...partial})
   return <div>
     <div>
       <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <label>Email</label>
-        <input type="email" name="email" onChange={event => changeLoginData({email: event.target.value})}/>
-        <label>Senha</label>
-        <input type="password" name="password" onChange={event => changeLoginData({password: event.target.value})}/>
-        <button type="submit">Login</button>
-      </form>
+      <Form<LoginData> schema={LoginSchema} initialState={defaultLoginData()} onSubmit={handleLogin} submitLabel="Login"/>
     </div>
     <div>
       <h2>Register</h2>
-      <form onSubmit={handleCreateAccount}>
-        <label>Email</label>
-        <input type="email" name="email"  onChange={event => changeSignUpData({email: event.target.value})}/>
-        <label>Nome</label>
-        <input type="text" name="name"  onChange={event => changeSignUpData({name: event.target.value})}/>
-        <label>Senha</label>
-        <input type="password" name="password" onChange={event => changeSignUpData({password: event.target.value})}/>
-        <label>Confirmar Senha</label>
-        <input type="password" name="confirmPassword"  onChange={event => changeSignUpData({confirmPassword: event.target.value})}/>
-        <label>Nome da loja</label>
-        <input type="text" name="storeName"  onChange={event => changeSignUpData({storeName: event.target.value})}/>
-        <button type="submit">Sign up</button>
-      </form>
+        <Form<SignUpDataWithConfirmPassword> schema={SignUpSchema} onSubmit={handleCreateAccount} submitLabel="Create Account" initialState={defaultSignUpData()}/>
     </div>
   </div>
 }
