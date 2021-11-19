@@ -39,3 +39,17 @@ type Sale = {
   deliveryMethod: DeliveryMethod;
   deliveryPrice: number;
 }
+
+
+
+type SignUpData = {
+  email: string;
+  name: string;
+  password: string;
+  storeName: string;
+}
+
+type LoginData = {
+  email: string;
+  password: string;
+}
