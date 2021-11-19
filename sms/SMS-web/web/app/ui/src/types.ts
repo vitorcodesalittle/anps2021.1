@@ -1,41 +1,41 @@
 
 type Store = {
-  name: string
+  name: string;
 }
 
 type User = {
-  id: number
-  name: string
-  stores: Store[]
-  email: string
-  emailVerified: boolean
+  id: number;
+  name: string;
+  stores: Store[];
+  email: string;
+  emailVerified: boolean;
 }
 
 
 type Product = {
-  id: number,
-  name: string,
-  stock: number,
-  suggestedPrice: number,
+  id: number;
+  name: string;
+  stock: number;
+  suggestedPrice: number;
 }
 
 type Item = {
-  productId: number
-  quantity: number
-  price: number
-  product: Product
+  productId: number;
+  quantity: number;
+  price: number;
+  product: Product;
 }
 
 type Transaction = {
-  id: number
-  createdAt: Date
-  items: Item[]
+  id: number;
+  createdAt: Date;
+  items: Item[];
 }
 
-type DeliveryMethod = "correios" | "jadlog" | "motoboy" | "sedex"
+type DeliveryMethod = 'correios' | 'jadlog' | 'motoboy' | 'sedex'
 
 type Sale = {
-  transaction: Transaction,
-  deliveryMethod: DeliveryMethod
-  deliveryPrice: number
+  transaction: Transaction;
+  deliveryMethod: DeliveryMethod;
+  deliveryPrice: number;
 }

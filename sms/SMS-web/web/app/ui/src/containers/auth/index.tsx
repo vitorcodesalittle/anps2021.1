@@ -13,7 +13,6 @@ function Auth() {
         <label>Senha</label>
         <label>Confirmar Senha</label>
         <label>Nome da loja</label>
-
       </form>
     </div>
   </div>
