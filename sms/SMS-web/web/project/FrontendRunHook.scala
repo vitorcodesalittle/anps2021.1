@@ -16,18 +16,18 @@ object FrontendRunHook {
       val npmBuildWatch: String = prefixCommandIfWindows(FrontendCommands.buildWatch)
 
       override def beforeStarted(): Unit = {
-        //        if (!(base / "ui" / "node_modules").exists()) Process(npmInstall, base / "ui").!
+        if (!(base / "ui" / "node_modules").exists()) Process(npmInstall, base / "ui").!
       }
 
       override def afterStarted(): Unit = {
-        //        process = Option(
-        //          Process(npmBuildWatch, base / "ui").run
-        //        )
+        process = Option(
+          Process(npmBuildWatch, base / "ui").run
+        )
       }
 
       override def afterStopped(): Unit = {
-        //        process.foreach(_.destroy())
-        //        process = None
+        process.foreach(_.destroy())
+        process = None
       }
     }
 

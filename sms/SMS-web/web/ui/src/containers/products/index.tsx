@@ -21,6 +21,7 @@ function Products() {
   const getProducts = () => {
     return apiGetProducts().then(response => {
       if (response.status === 200) {
+        console.log(response.data)
         setProducts(response.data)
       }
     })
@@ -56,6 +57,7 @@ function Products() {
     suggestedPrice: {
       label: "Price",
       htmlType: "number",
+      numberStep: "0.1",
       order: 2,
       onChange: (data, value) => ({...data, suggestedPrice: parseInt(value, 10)})
     },
@@ -66,6 +68,7 @@ function Products() {
       onChange: (data, value) => ({...data, barcode: value})
     }
   }
+  console.log(products)
 
   return (
     <Content>

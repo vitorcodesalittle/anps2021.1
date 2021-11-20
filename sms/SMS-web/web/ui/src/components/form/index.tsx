@@ -4,20 +4,11 @@ import { Schema, SchemaProperty } from '../../pkg/form'
 interface FormProps<T extends {}> { schema: Schema<T>, submitLabel: string, onSubmit: (value: T) => any, initialState: T, children?: React.ReactElement }
 
 
-const Input = ({key, label, type, onChange}: { key:string, label: string, type: string, onChange: React.ChangeEventHandler<HTMLInputElement>}) => {
+const Input = ({key, label, type, onChange, step}: { key:string, step?: string, label: string, type: string, onChange: React.ChangeEventHandler<HTMLInputElement>}) => {
     return (
             <div key={key}>
                 <label>{label}</label>
-                <input type={type} name={key} onChange={(event) => onChange(event)}></input>
-            </div>
-        )
-}
-
-const NumberInput = ({key, label, type, onChange}: { key:string, label: string, type: string, onChange: React.ChangeEventHandler<HTMLInputElement>}) => {
-    return (
-            <div key={key}>
-                <label>{label}</label>
-                <input type={type} name={key} onChange={(event) => onChange(event)}></input>
+                <input type={type} step={type === "number" ? step || "1" : undefined} name={key} onChange={(event) => onChange(event)}></input>
             </div>
         )
 }

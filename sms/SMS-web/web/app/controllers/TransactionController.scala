@@ -4,7 +4,7 @@ import model.Boundary
 import model.services.session.UserAction
 import model.transactions.forms.SaleData
 import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
-import play.api.mvc.{Action, AnyContent, BaseController, ControllerComponents}
+import play.api.mvc.{Action, BaseController, ControllerComponents}
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
@@ -46,16 +46,4 @@ class TransactionController @Inject()(boundary: Boundary, userAction: UserAction
   //      }
   //    }
   //  }
-
-  def index: Action[AnyContent] = userAction {
-    implicit request ⇒ {
-      boundary.getTransactions(request.userInfo) match {
-        case Success(transactions) ⇒ Ok(views.html.transactions(transactions))
-        case Failure(e) ⇒ {
-          println(e)
-          InternalServerError("Não foi possível recuperar as transações")
-        }
-      }
-    }
-  }
 }

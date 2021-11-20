@@ -11,7 +11,7 @@ val Success = 0
 val Error = 1
 
 // Run serve task when Play runs in dev mode, that is, when using 'sbt run'
-//PlayKeys.playRunHooks += baseDirectory.map(FrontendRunHook.apply).value
+PlayKeys.playRunHooks += baseDirectory.map(FrontendRunHook.apply).value
 
 // True if build running operating system is windows.
 val isWindows = System.getProperty("os.name").toLowerCase().contains("win")

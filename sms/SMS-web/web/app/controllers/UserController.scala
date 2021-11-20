@@ -36,10 +36,6 @@ class UserController @Inject()(val controllerComponents: ControllerComponents, b
     )(LoginData.apply)(LoginData.unapply)
   )
 
-  def index: Action[AnyContent] = Action { implicit request =>
-    Ok(views.html.user(signUpForm, loginForm))
-  }
-
   def login(): Action[JsValue] = Action(parse.json) {
     implicit request => {
       request.body.validate[LoginData] match {

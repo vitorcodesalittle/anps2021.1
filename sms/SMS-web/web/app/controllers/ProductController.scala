@@ -6,7 +6,7 @@ import model.products.forms.ProductData
 import model.services.session.UserAction
 import play.api.data.Form
 import play.api.data.Forms.{mapping, number, text}
-import play.api.libs.json.{Json, OWrites}
+import play.api.libs.json._
 import play.api.mvc.{Action, AnyContent, BaseController, ControllerComponents}
 
 import javax.inject.Inject
@@ -25,14 +25,22 @@ class ProductController @Inject()(boundary: Boundary, userAction: UserAction, va
     )(ProductData.apply)(ProductData.unapply)
   )
 
-  def createProduct: Action[AnyContent] = userAction {
+  def createProduct: Action[JsValue] = userAction(parse.json) {
     implicit request => {
-      val productData: ProductData = productForm.bindFromRequest().get
-      val productTry: Try[Product] = boundary.createProduct(request.userInfo, productData)
-      productTry match {
-        case Success(p) => Ok(Json.toJson(p))
-        case Failure(e) => InternalServerError(e.toString) // don't do this
+      request.body.validate[ProductData] match {
+        case JsSuccess(productData, _) ⇒ {
+          val productTry: Try[Product] = boundary.createProduct(request.userInfo, productData)
+          productTry match {
+            case Success(p) => Ok(Json.toJson(p))
+            case Failure(e) => InternalServerError(e.toString) // don't do this
+          }
+        }
+        case JsError(errors) ⇒ {
+          println(errors)
+          BadRequest
+        }
       }
+
     }
   }
 
@@ -40,7 +48,7 @@ class ProductController @Inject()(boundary: Boundary, userAction: UserAction, va
     implicit request => {
       val productsTry: Try[Seq[Product]] = boundary.getProductsFromUser(request.userInfo)
       productsTry match {
-        case Success(products) => Ok(views.html.products(products, productForm))
+        case Success(products) => Ok(Json.toJson(products))
         case Failure(_) => InternalServerError("Failed to get products")
       }
     }

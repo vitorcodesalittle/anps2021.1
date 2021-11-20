@@ -7,7 +7,7 @@
   "scripts": {
     "start": "parcel",
     "build": "parcel build --dist-dir ../public",
-    "build-watch": "nodemon --watch src --exec parcel build --dist-dir ../public",
+    "build-watch": "nodemon --watch src/ -e ts,tsx --exec parcel build src/index.html --dist-dir ../public",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint --fix ./src/**/*.{tsx,ts}"
   },

@@ -1,6 +1,6 @@
 package model.services.session
 
-import play.api.mvc.Results.Redirect
+import play.api.mvc.Results.Forbidden
 import play.api.mvc._
 
 import javax.inject.Inject
@@ -17,7 +17,7 @@ class UserAction @Inject()(val parser: BodyParsers.Default, sessionService: Sess
     } yield decodedCookie
     userInfoOption match {
       case Some(userInfo) => block(UserRequest(request, userInfo))
-      case None => Future(Redirect("/auth"))
+      case None => Future(Forbidden)
     }
   }
 
