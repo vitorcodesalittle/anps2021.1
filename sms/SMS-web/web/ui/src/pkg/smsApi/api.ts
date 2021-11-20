@@ -9,3 +9,5 @@ export const login = (data: LoginData) => api.post('/login', data)
 export const signUp = (data: SignUpData) => api.post('/sign-up', data)
 
 export const getProducts = () => api.get('/products')
+
+export const createProduct = (productData: ProductData) => api.post('/products', productData)

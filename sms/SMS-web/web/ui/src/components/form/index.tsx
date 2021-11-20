@@ -1,30 +1,48 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Schema, SchemaProperty } from '../../pkg/form'
 
 interface FormProps<T extends {}> { schema: Schema<T>, submitLabel: string, onSubmit: (value: T) => any, initialState: T, children?: React.ReactElement }
+
+
+const Input = ({key, label, type, onChange}: { key:string, label: string, type: string, onChange: React.ChangeEventHandler<HTMLInputElement>}) => {
+    return (
+            <div key={key}>
+                <label>{label}</label>
+                <input type={type} name={key} onChange={(event) => onChange(event)}></input>
+            </div>
+        )
+}
+
+const NumberInput = ({key, label, type, onChange}: { key:string, label: string, type: string, onChange: React.ChangeEventHandler<HTMLInputElement>}) => {
+    return (
+            <div key={key}>
+                <label>{label}</label>
+                <input type={type} name={key} onChange={(event) => onChange(event)}></input>
+            </div>
+        )
+}
 
 const Form = <T extends {},> (props: FormProps<T>) => {
     const { schema, initialState, submitLabel, onSubmit} = props;
     const [data, setData] = useState<T>(initialState)
 
-  const changeData  = (partial: Partial<T>) => setData({...data, ...partial})
     const nodes = Object.entries(schema).map(([key, value]) => {
         const valueAsProp = value as SchemaProperty<T, any>
         return [key, valueAsProp] as [string, SchemaProperty<T, any>]
     })
     .sort(([_, value]) => value.order)
     .map(([key, value]) => {
-        return (
-            <div key={key}>
-                <label>{value.label}</label>
-                <input type={value.htmlType} name={key} onChange={(event) => changeData(value.onChange(data, event.target.value))}></input>
-            </div>
-        )
+        return <Input key={key} type={value.htmlType} label={value.label} onChange={event => setData(value.onChange(data, event.target.value))}/>
     })
     const handleSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
         event.preventDefault();
         onSubmit(data)
     }
+
+    useEffect(() => {
+        console.log("form changed:")
+        console.log(data)
+    }, [data])
 
     return (
         <form onSubmit={handleSubmit}>

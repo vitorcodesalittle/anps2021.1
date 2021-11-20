@@ -2,12 +2,12 @@ import { stringify } from "querystring"
 
 export type PropertyValidator<T, P> = (data: T, value: P) => Either<string, boolean>
 export type SchemaProperty<T, P> = {
-    validate: PropertyValidator<T, P>,
-    type: "text" | "number";
-    htmlType: "text" | "password";
+    validate?: PropertyValidator<T, P>,
+    type?: "text" | "number";
+    htmlType: "text" | "password" | "number";
     label: string;
     order: number;
-    onChange: (data: T, value: P) => T
+    onChange: (data: T, value: string) => T
 }
 export type Schema<T extends {}> = {
     [P in keyof T]: SchemaProperty<T, T[P]>

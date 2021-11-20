@@ -11,7 +11,6 @@ type User = {
   emailVerified: boolean;
 }
 
-
 type Product = {
   id: number;
   name: string;
@@ -20,6 +19,14 @@ type Product = {
   barcode: string;
   storeId: number;
 }
+
+type ProductData = {
+  name: string;
+  suggestedPrice: number;
+  stock: number;
+  barcode: string;
+}
+
 
 type Item = {
   productId: number;
