@@ -1,5 +1,7 @@
 package model.users
 
+import play.api.libs.json.{Json, OWrites, Reads}
+
 case class User(
                  id: Option[Int],
                  name: String,
@@ -9,4 +11,8 @@ case class User(
                ) {
 }
 
+object User {
+  implicit val reads: Reads[User] = Json.reads[User]
+  implicit val writes: OWrites[User] = Json.writes[User]
 
+}

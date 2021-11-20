@@ -40,19 +40,28 @@ class UserController @Inject()(val controllerComponents: ControllerComponents, b
     Ok(views.html.user(signUpForm, loginForm))
   }
 
-  def login(): Action[AnyContent] = Action {
+  def login(): Action[JsValue] = Action(parse.json) {
     implicit request => {
-      val loginData: LoginData = loginForm.bindFromRequest().get
-      val userCookieTry: Try[(User, Cookie)] = boundary.login(loginData)
-      userCookieTry match {
-        case Success((_, authCookie)) => {
-          Redirect("/testauth").withCookies(authCookie)
+      request.body.validate[LoginData] match {
+        case JsSuccess(loginData, _) ⇒ {
+          println(loginData)
+          val userCookieTry: Try[(User, Cookie)] = boundary.login(loginData)
+          userCookieTry match {
+            case Success((user, authCookie)) => {
+              println(user)
+              Ok(Json.toJson(user)).withCookies(authCookie)
+            }
+            case Failure(exception) => {
+              println(exception)
+              InternalServerError("Could not login")
+            }
+          }
         }
-        case Failure(exception) => {
-          println(exception)
-          InternalServerError("Could not login")
+        case JsError(error) ⇒ {
+          BadRequest("Invalid Json")
         }
       }
+
     }
   }
 

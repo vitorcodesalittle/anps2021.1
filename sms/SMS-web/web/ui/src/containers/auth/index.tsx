@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Form from '../../components/form'
 import { fail, Schema, success } from '../../pkg/form'
+import { getProducts, login, signUp } from '../../pkg/smsApi/api'
 
 type SignUpDataWithConfirmPassword = SignUpData & {
     confirmPassword: string;
@@ -102,17 +103,21 @@ const SignUpSchema: Schema<SignUpDataWithConfirmPassword> = {
 }
 
 function Auth() {
-  const [signUpData, setSignUpData] = useState<SignUpDataWithConfirmPassword>(defaultSignUpData())
   const handleLogin = (loginData: LoginData) => {
-    console.log(loginData)
+    login(loginData)
+        .then(console.log)
+        .catch(console.error)
   }
   const handleCreateAccount = (signUpData: SignUpDataWithConfirmPassword) => {
-    console.log(signUpData)
+      signUp(signUpData)
+        .then(console.log)
+        .catch(console.error)
   }
   return <div>
     <div>
       <h2>Login</h2>
       <Form<LoginData> schema={LoginSchema} initialState={defaultLoginData()} onSubmit={handleLogin} submitLabel="Login"/>
+      <button onClick={() => { getProducts().then(console.log).catch(console.error)}}>Print products page ????</button>
     </div>
     <div>
       <h2>Register</h2>

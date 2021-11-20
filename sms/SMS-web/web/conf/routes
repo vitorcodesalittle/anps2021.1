@@ -15,7 +15,6 @@ GET     /products                   controllers.ProductController.getProducts()
 POST    /products                   controllers.ProductController.createProduct()
 
 # GET     /cashflow                   controllers.TransactionController.mountCashFlow()
-+nocsrf
 POST    /sales                      controllers.TransactionController.doSale()
 GET    /transactions                controllers.TransactionController.index()
 

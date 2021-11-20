@@ -4,7 +4,7 @@ import slick.jdbc.PostgresProfile.api._
 import slick.lifted.Tag
 
 class Users(tag: Tag) extends Table[User](tag, "USERS") {
-  def * = (id.?, name, email, passwordHash.?, emailVerified.?) <> (User.tupled, User.unapply)
+  def * = (id.?, name, email, passwordHash.?, emailVerified.?) <> ((User.apply _).tupled, User.unapply)
 
   def id = column[Int]("ID", O.PrimaryKey, O.AutoInc)
 
