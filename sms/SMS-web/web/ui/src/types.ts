@@ -17,6 +17,8 @@ type Product = {
   name: string;
   stock: number;
   suggestedPrice: number;
+  barcode: string;
+  storeId: number;
 }
 
 type Item = {

@@ -9,6 +9,12 @@ export default function App() {
     <div>
       <Router>
         <Routes>
+          <Route path="/" element={
+            <>
+              <p>Stock management is fun with sms</p>
+              <a href="/auth">Click here to create an account</a>
+            </>
+          }/>
           <Route path="/auth" element={<Auth/>}/>
           <Route path="/transactions" element={<Transactions/>}/>
           <Route path="/products" element={<Products/>}/>

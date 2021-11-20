@@ -1,9 +1,8 @@
-import axios, { AxiosRequestTransformer } from 'axios'
-
+import axios from 'axios'
 
 const api = axios.create({
-    baseURL: 'http://localhost:9000',
-    withCredentials: true
+    withCredentials: true,
+    baseURL: "/api"
 })
 
 export const login = (data: LoginData) => api.post('/login', data)
