@@ -1,6 +1,6 @@
 package controllers
 
-import model.Boundary
+import model.Facade
 import model.services.session.UserAction
 import model.transactions.forms.SaleData
 import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
@@ -10,7 +10,7 @@ import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success}
 
-class TransactionController @Inject()(boundary: Boundary, userAction: UserAction, val controllerComponents: ControllerComponents)(implicit ec: ExecutionContext)
+class TransactionController @Inject()(boundary: Facade, userAction: UserAction, val controllerComponents: ControllerComponents)(implicit ec: ExecutionContext)
   extends BaseController with play.api.i18n.I18nSupport {
 
   //  val cashFlowForm: Form[CacheFlowRequestData] = ???

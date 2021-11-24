@@ -1,6 +1,6 @@
 package controllers
 
-import model.Boundary
+import model.Facade
 import model.services.session.UserAction
 import model.store.forms.StoreData
 import model.users.User
@@ -15,7 +15,7 @@ import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success, Try}
 
 @Singleton
-class UserController @Inject()(val controllerComponents: ControllerComponents, boundary: Boundary, userAction: UserAction)
+class UserController @Inject()(val controllerComponents: ControllerComponents, boundary: Facade, userAction: UserAction)
                               (implicit ec: ExecutionContext)
   extends BaseController {
   def login(): Action[JsValue] = Action(parse.json) {

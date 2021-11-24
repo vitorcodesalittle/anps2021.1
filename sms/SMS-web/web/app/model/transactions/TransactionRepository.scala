@@ -1,23 +1,24 @@
 package model.transactions
 
+import slick.dbio.DBIO
+
 import java.time.Instant
-import scala.concurrent.Future
 
 trait TransactionRepository {
 
-  def getAllTransactions(storeId: Int): Future[Seq[(Transaction, Option[Sale], Option[Purchase], Seq[(Item, Product)])]]
+  def getAllTransactions(storeId: Int): DBIO[Seq[(Transaction, Option[Sale], Option[Purchase], Seq[(Item, Product)])]]
 
-  def getTransactions(storeId: Int, since: Instant, to: Instant): Future[Seq[(Transaction, Option[Sale], Option[Purchase], Seq[Item])]]
+  def getTransactions(storeId: Int, since: Instant, to: Instant): DBIO[Seq[(Transaction, Option[Sale], Option[Purchase], Seq[Item])]]
 
-  def createSaleWithTransaction(transaction: Transaction, sale: Sale, items: Seq[Item]): Future[(Transaction, Sale, Seq[Item])]
+  def createSaleWithTransaction(transaction: Transaction, sale: Sale, items: Seq[Item]): DBIO[(Transaction, Sale, Seq[Item])]
 
-  def createSale(sale: Sale): Future[Sale]
+  def createSale(sale: Sale): DBIO[Sale]
 
-  def getSales(since: Instant, to: Instant): Future[Seq[Sale]]
+  def getSales(since: Instant, to: Instant): DBIO[Seq[Sale]]
 
-  def getPurchases(since: Instant, to: Instant): Future[Seq[Purchase]]
+  def getPurchases(since: Instant, to: Instant): DBIO[Seq[Purchase]]
 
-  def createPurchase(purchase: Purchase): Future[Purchase]
+  def createPurchase(purchase: Purchase): DBIO[Purchase]
 
-  def deleteSale(saleId: Int): Future[Int]
+  def deleteSale(saleId: Int): DBIO[Int]
 }

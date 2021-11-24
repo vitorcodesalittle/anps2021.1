@@ -1,6 +1,6 @@
 package controllers
 
-import model.Boundary
+import model.Facade
 import model.products.Product
 import model.products.forms.ProductData
 import model.services.session.UserAction
@@ -13,7 +13,7 @@ import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success, Try}
 
-class ProductController @Inject()(boundary: Boundary, userAction: UserAction, val controllerComponents: ControllerComponents)(implicit ec: ExecutionContext) extends BaseController with play.api.i18n.I18nSupport {
+class ProductController @Inject()(boundary: Facade, userAction: UserAction, val controllerComponents: ControllerComponents)(implicit ec: ExecutionContext) extends BaseController with play.api.i18n.I18nSupport {
 
   implicit val productWrites: OWrites[Product] = Json.writes[Product]
   val productForm: Form[ProductData] = Form(
