@@ -3,44 +3,49 @@ package model.users
 import model.services.encryption.EncryptionService
 import model.services.session.{SessionService, UserInfo}
 import model.store.{Store, StoreRepositoryRDB}
-import model.users.exceptions.UserExceptions.PasswordTooWeakException
+import model.users.exceptions.UserExceptions.{PasswordInvalidException, PasswordTooWeakException}
 import model.users.forms.{LoginData, SignUpData}
 import play.api.mvc.Cookie
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, ExecutionContext}
+import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.util.{Failure, Success, Try}
 
 @Singleton
 class UserControl @Inject()(repo: UserRepositoryBDR, storeRepo: StoreRepositoryRDB, sessionService: SessionService, encryptionService: EncryptionService)(implicit val ec: ExecutionContext) {
 
-  def login(loginData: LoginData): Try[(User, Cookie)] = {
-    val userFuture = repo getByEmail loginData.email
-    for {
-      user <- Await.ready(userFuture, Duration.Inf).value.get
-      validUser <- verifyPassword(user, loginData.password)
-      store ← Await.ready(storeRepo.getFromOwner(user.id.get), Duration.Inf).value.get
-      if validUser
-      authCookie <- user.id match {
-        case Some(id) => Success(sessionService.encodeUserSession(UserInfo(id, store.head.id.get)))
-        case None => Failure(new RuntimeException())
-      }
-    } yield (user, authCookie)
+  def login(loginData: LoginData): Future[(User, Cookie)] = {
+      repo.run(for {
+        user <- repo getByEmail loginData.email
+        store <- storeRepo getFromOwner user.id.get
+      } yield (user, store)) map (result => {
+        val (user, store) = result
+        verifyPassword(user, loginData.password) match {
+          case Failure(exception) => throw exception
+          case Success(valid) => if (valid) {
+            (user, sessionService.encodeUserSession(UserInfo(user.id.get, store.head.id.get)))
+          } else {
+            throw new PasswordInvalidException
+          }
+        }
+      })
   }
 
-  def signUp(signUpData: SignUpData): Try[User] = {
+  def signUp(signUpData: SignUpData): Future[User] = {
     val passwordStrength = verifyPasswordStrength(signUpData.password)
     if (passwordStrength < 6) {
-      Failure(new PasswordTooWeakException)
+      Future.failed(new PasswordTooWeakException)
     } else {
-      val user = User(id = None, email = signUpData.email, name = signUpData.name, passwordHash = None)
-      val savedUser = for {
-        savedUser ← repo.create(user, signUpData.password)
-        _ ← storeRepo.create(Store(id = None, name = signUpData.storeData.name, savedUser.id.getOrElse(-1)))
-      } yield savedUser
-      Await.ready(savedUser, Duration.Inf)
-      savedUser.value.get
+      Future.fromTry(encryptionService.hashPassword(signUpData.password))
+        .flatMap(passwordHash => {
+          repo.run((
+            for {
+              savedUser <- repo create User(id = None, email = signUpData.email, name = signUpData.name, passwordHash = Some(passwordHash))
+              _ <- storeRepo create Store(id = None, name = signUpData.storeData.name, ownerId = savedUser.id.get)
+            } yield savedUser)
+          )
+        })
     }
   }
 

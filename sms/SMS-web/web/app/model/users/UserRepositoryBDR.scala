@@ -13,25 +13,28 @@ import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
-@Singleton
-class UserRepositoryBDR @Inject()(encryptionService: EncryptionService, dbConfigProvider: DatabaseConfigProvider, implicit val ec: ExecutionContext) extends UserRepository {
-  val dbConfig: DatabaseConfig[PostgresProfile] = dbConfigProvider.get[PostgresProfile]
+abstract class DBRunner {
+  val dbConfigProvider: DatabaseConfigProvider
+  val dbConfig = dbConfigProvider.get[PostgresProfile]
   val db = dbConfig.db
+  def run[R, S <: NoStream, T <: Effect](action: DBIOAction[R, S, T]) = {
+    db.run(action)
+  }
+}
+
+@Singleton
+class UserRepositoryBDR @Inject()(override val dbConfigProvider: DatabaseConfigProvider, implicit val ec: ExecutionContext) extends DBRunner with UserRepository {
+  override val dbConfig: DatabaseConfig[PostgresProfile] = dbConfigProvider.get[PostgresProfile]
+  override val db = dbConfig.db
   val users = TableQuery[Users]
 
   def getAll: Future[Seq[User]] = db run users.result
 
-  override def create(user: User, password: String): Future[User] = {
-    encryptionService.hashPassword(password, encryptionService.genSalt) match {
-      case Success(hashedPassword) ⇒ db.run {
-        val userWithPassword = user.copy(passwordHash = Some(hashedPassword))
-        (users returning users.map(_.id) into ((_, newId) => user.copy(id = Some(newId)))) += userWithPassword
-      }
-      case Failure(e) ⇒ Future.failed(e)
-    }
+  override def create(user: User): DBIO[User] = {
+    (users returning users.map(_.id) into ((_, newId) => user.copy(id = Some(newId)))) += user
   }
 
-  override def getByEmail(email: String): Future[User] = db.run {
+  override def getByEmail(email: String): DBIO[User] = {
     users.filter(user => user.email === email).result.head
   }
 

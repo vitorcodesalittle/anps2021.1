@@ -11,6 +11,8 @@ class EncryptionService {
 
   def hashPassword(password: String, salt: String): Try[String] = password.bcryptSafeBounded(salt)
 
+  def hashPassword(password: String): Try[String] = password.bcryptSafeBounded(genSalt)
+
   def genSalt: String = generateSalt
 
 }

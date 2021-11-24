@@ -1,11 +1,11 @@
 package model.store
 
-import scala.concurrent.Future
+import slick.dbio.DBIO
 
 trait StoreRepository {
 
-  def create(store: Store): Future[Store]
+  def create(store: Store): DBIO[Store]
 
-  def getFromOwner(ownerId: Int): Future[Seq[Store]]
+  def getFromOwner(ownerId: Int): DBIO[Seq[Store]]
 
 }

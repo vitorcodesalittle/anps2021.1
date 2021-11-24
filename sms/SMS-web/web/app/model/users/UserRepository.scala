@@ -1,9 +1,11 @@
 package model.users
 
+import slick.dbio.DBIO
+
 import scala.concurrent.Future
 
 trait UserRepository {
-  def create(user: User, password: String): Future[User]
+  def create(user: User): DBIO[User]
 
-  def getByEmail(email: String): Future[User]
+  def getByEmail(email: String): DBIO[User]
 }

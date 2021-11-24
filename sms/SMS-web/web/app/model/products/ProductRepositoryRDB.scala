@@ -1,5 +1,6 @@
 package model.products
 
+import model.users.DBRunner
 import play.api.db.slick.DatabaseConfigProvider
 import slick.basic.DatabaseConfig
 import slick.jdbc.PostgresProfile
@@ -12,29 +13,30 @@ import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext, Future}
 
 @Singleton
-class ProductRepositoryRDB @Inject()(dbConfigProvider: DatabaseConfigProvider, implicit val ec: ExecutionContext) extends ProductRepository {
-  val dbConfig: DatabaseConfig[PostgresProfile] = dbConfigProvider.get[PostgresProfile]
-  val db = dbConfig.db
+class ProductRepositoryRDB @Inject()(override val dbConfigProvider: DatabaseConfigProvider, implicit val ec: ExecutionContext)
+  extends DBRunner with ProductRepository {
+  override val dbConfig: DatabaseConfig[PostgresProfile] = dbConfigProvider.get[PostgresProfile]
+  override val db = dbConfig.db
   val products = TableQuery[Products]
 
-  override def getAll(): Future[Seq[Product]] = db run products.result
+  override def getAll(): DBIO[Seq[Product]] = products.result
 
-  override def getByStoreId(storeId: Int): Future[Seq[Product]] = db run {
+  override def getByStoreId(storeId: Int): DBIO[Seq[Product]] = {
     products.filter(_.storeId === storeId).result
   }
 
-  override def create(product: Product): Future[Product] = db run {
+  override def create(product: Product): DBIO[Product] = {
     (products returning products.map(_.id) into ((product, newId) ⇒ product.copy(id = Some(newId)))) += product
   }
 
-  override def getByName(name: String): Future[Product] = ???
+  override def getByName(name: String): DBIO[Product] = ???
 
-  override def getById(id: Int): Future[Product] = ???
+  override def getById(id: Int): DBIO[Product] = ???
 
 
-  override def update(productUpdate: Product): Future[Product] = ???
+  override def update(productUpdate: Product): DBIO[Product] = ???
 
-  override def remove(id: Int): Future[Int] = ???
+  override def remove(id: Int): DBIO[Int] = ???
 
   val createSchemaFuture = for {
     tables ← db.run {

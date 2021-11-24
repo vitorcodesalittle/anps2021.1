@@ -1,19 +1,19 @@
 package model.products
 
-import scala.concurrent.Future
+import slick.dbio.DBIO
 
 trait ProductRepository {
-  def getAll(): Future[Seq[Product]]
+  def getAll(): DBIO[Seq[Product]]
 
-  def getByStoreId(storeId: Int): Future[Seq[Product]]
+  def getByStoreId(storeId: Int): DBIO[Seq[Product]]
 
-  def getByName(name: String): Future[Product]
+  def getByName(name: String): DBIO[Product]
 
-  def getById(id: Int): Future[Product]
+  def getById(id: Int): DBIO[Product]
 
-  def create(product: Product): Future[Product]
+  def create(product: Product): DBIO[Product]
 
-  def update(productUpdate: Product): Future[Product]
+  def update(productUpdate: Product): DBIO[Product]
 
-  def remove(id: Int): Future[Int]
+  def remove(id: Int): DBIO[Int]
 }
