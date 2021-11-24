@@ -17,34 +17,14 @@ import scala.util.{Failure, Success, Try}
 @Singleton
 class UserController @Inject()(val controllerComponents: ControllerComponents, boundary: Boundary, userAction: UserAction)
                               (implicit ec: ExecutionContext)
-  extends BaseController
-    with play.api.i18n.I18nSupport {
-
-  val signUpForm: Form[SignUpData] = Form(
-    mapping(
-      "name" -> text(minLength = 1),
-      "email" -> text(minLength = 1),
-      "password" -> text,
-      "storeName" → of[StoreData]
-    )(SignUpData.apply)(SignUpData.unapply)
-  )
-
-  val loginForm: Form[LoginData] = Form(
-    mapping(
-      "email" -> text(minLength = 1),
-      "password" -> text
-    )(LoginData.apply)(LoginData.unapply)
-  )
-
+  extends BaseController {
   def login(): Action[JsValue] = Action(parse.json) {
     implicit request => {
       request.body.validate[LoginData] match {
         case JsSuccess(loginData, _) ⇒ {
-          println(loginData)
           val userCookieTry: Try[(User, Cookie)] = boundary.login(loginData)
           userCookieTry match {
             case Success((user, authCookie)) => {
-              println(user)
               Ok(Json.toJson(user)).withCookies(authCookie)
             }
             case Failure(exception) => {
