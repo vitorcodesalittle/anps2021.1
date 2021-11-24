@@ -13,8 +13,9 @@ case class Sale(
                  override val transactionId: TransactionId,
                  override val storeId: Int,
                  override val createdAt: Instant,
+                 override val items: Option[Seq[Item]],
                  id: Int,
                  deliveryMethod: DeliveryMethod,
                  deliveryPrice: Double,
                  deliveryAddress: Address)
-  extends Transaction(transactionId, storeId, createdAt)
+  extends Transaction(transactionId, storeId, createdAt, items)
