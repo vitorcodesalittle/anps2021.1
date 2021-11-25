@@ -17,9 +17,9 @@ class Transactions(tag: Tag) extends Table[Transaction](tag, "TRANSACTIONS") {
 
   override def * : ProvenShape[Transaction] = (id.?, storeId, createdAt) <> (row => {
     val (id, storeId, createdAt) = row
-    Transaction(TransactionId(id.get), storeId, createdAt, None)
+    Transaction(Some(TransactionId(id.get)), storeId, createdAt, None)
   }, (transaction: Transaction) => {
-    Some((Some(transaction.transactionId.value), transaction.storeId, transaction.createdAt))
+    Some((transaction.transactionId flatMap (id => Some(id.value)), transaction.storeId, transaction.createdAt))
   })
 
   lazy val stores = TableQuery[Stores]

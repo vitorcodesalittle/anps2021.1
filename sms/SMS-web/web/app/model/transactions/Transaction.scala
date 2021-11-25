@@ -6,4 +6,8 @@ import java.time.Instant
 
 case class TransactionId(value: Int) extends MappedTo[Int]
 
-abstract case class Transaction(transactionId: TransactionId, storeId: Int, createdAt: Instant, items: Option[Seq[Item]])
+abstract case class Transaction(
+                                 transactionId: Option[TransactionId],
+                                 storeId: Int,
+                                 createdAt: Instant,
+                                 items: Option[Seq[Item]])

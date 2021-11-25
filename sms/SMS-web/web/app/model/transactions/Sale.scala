@@ -10,7 +10,7 @@ case object Correios extends DeliveryMethod("Correios")
 case object JadLog extends DeliveryMethod("JadLog")
 
 case class Sale(
-                 override val transactionId: TransactionId,
+                 override val transactionId: Option[TransactionId],
                  override val storeId: Int,
                  override val createdAt: Instant,
                  override val items: Option[Seq[Item]],

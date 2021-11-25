@@ -1,11 +1,12 @@
 package model.transactions
 
 import slick.jdbc.PostgresProfile.api._
+import slick.lifted.ProvenShape
 
 class Items(tag: Tag) extends Table[Item](tag, "ITEMS") {
   def id: Rep[Int] = column[Int]("ID", O.PrimaryKey, O.AutoInc)
 
-  def transactionId: Rep[Int] = column[Int]("TRANSACTION_ID")
+  def transactionId: Rep[TransactionId] = column[TransactionId]("TRANSACTION_ID")
 
   def productId: Rep[Int] = column[Int]("PRODUCT_ID")
 
@@ -13,6 +14,11 @@ class Items(tag: Tag) extends Table[Item](tag, "ITEMS") {
 
   def price: Rep[Double] = column[Double]("PRICE")
 
-  def * = (id.?, transactionId.?, productId, quantity, price) <> ((Item.apply _).tupled, Item.unapply)
+  def * : ProvenShape[Item] = (id.?, transactionId.?, productId, quantity, price) <> ((row) => {
+    val (id, transactionId, productId, quantity, price) = row
+    Item(id, transactionId, productId, quantity, price, None)
+  }, (item: Item) => {
+    Some((item.id, item.transactionId, item.productId, item.quantity, item.price))
+  })
 
 }

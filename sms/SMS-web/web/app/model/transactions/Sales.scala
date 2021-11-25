@@ -32,7 +32,7 @@ class Sales(tag: Tag) extends Table[Sale](tag, "SALES") {
 
   def addressCity: Rep[String] = column[String]("ADDRESS_CITY")
 
-  def * : ProvenShape[Sale] = (id.?, transactionId, storeId, createdAt, deliveryMethod, deliveryPrice, (addressCEP, addressStreet, addressCity, addressState, addressCountry, addressExtra, addressProvince)).shaped <> (row => {
+  def * : ProvenShape[Sale] = (id.?, transactionId.?, storeId, createdAt, deliveryMethod, deliveryPrice, (addressCEP, addressStreet, addressCity, addressState, addressCountry, addressExtra, addressProvince)).shaped <> (row => {
     val (id, transactionId, storeId, createdAt, deliveryMethod, deliveryPrice, (cep, street, state, city, country, extra, province)) = row
     val address = Address(country = country, state = state, city = city, street = street, province = province, extra = extra, cep = cep)
     Sale(transactionId = transactionId, id = id, storeId = storeId, createdAt = createdAt, deliveryMethod = deliveryMethod, deliveryPrice = deliveryPrice, deliveryAddress = address, items = None)
