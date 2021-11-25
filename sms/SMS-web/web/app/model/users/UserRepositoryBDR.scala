@@ -1,6 +1,5 @@
 package model.users
 
-import model.services.encryption.EncryptionService
 import play.api.db.slick.DatabaseConfigProvider
 import slick.basic.DatabaseConfig
 import slick.jdbc.PostgresProfile
@@ -11,7 +10,6 @@ import slick.lifted.TableQuery
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext, Future}
-import scala.util.{Failure, Success}
 
 abstract class DBRunner {
   val dbConfigProvider: DatabaseConfigProvider

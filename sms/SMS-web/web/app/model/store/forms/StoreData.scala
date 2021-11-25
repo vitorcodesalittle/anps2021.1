@@ -2,6 +2,7 @@ package model.store.forms
 
 import play.api.data.FormError
 import play.api.data.format.Formatter
+import play.api.libs.json.{Json, OWrites, Reads}
 
 case class StoreData(name: String)
 
@@ -23,4 +24,7 @@ object StoreData {
   }
 
   implicit val storeDataFormatter: StoreDataFormatter = new StoreDataFormatter
+
+  implicit val reads: Reads[StoreData] = Json.reads[StoreData]
+  implicit val writes: OWrites[StoreData] = Json.writes[StoreData]
 }

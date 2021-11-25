@@ -11,47 +11,41 @@ import play.api.libs.json._
 import play.api.mvc._
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success, Try}
 
 @Singleton
 class UserController @Inject()(val controllerComponents: ControllerComponents, boundary: Facade, userAction: UserAction)
                               (implicit ec: ExecutionContext)
   extends BaseController {
-  def login(): Action[JsValue] = Action(parse.json) {
+  def login(): Action[JsValue] = Action(parse.json).async {
     implicit request => {
       request.body.validate[LoginData] match {
         case JsSuccess(loginData, _) ⇒ {
-          val userCookieTry: Try[(User, Cookie)] = boundary.login(loginData)
-          userCookieTry match {
-            case Success((user, authCookie)) => {
-              Ok(Json.toJson(user)).withCookies(authCookie)
-            }
-            case Failure(exception) => {
-              println(exception)
-              InternalServerError("Could not login")
-            }
-          }
-        }
-        case JsError(error) ⇒ {
-          BadRequest("Invalid Json")
+          boundary.login(loginData).map(userAndCookie => {
+            val (user, cookie) = userAndCookie
+            Ok(Json.toJson(user)).withCookies(cookie)
+          }).recoverWith(error => {
+            println(error)
+            Future.successful(InternalServerError("Failuuu"))
+          })
         }
       }
 
     }
   }
 
-  def signUp(): Action[AnyContent] = Action {
+  def signUp(): Action[JsValue] = Action(parse.json).async {
     implicit request => {
-      val signUpData = signUpForm.bindFromRequest.get
-      val savedUser: Try[User] = boundary.signUp(signUpData)
-      savedUser match {
-        case Success(_) => {
-          Redirect("/auth")
+      request.body.validate[SignUpData] match{
+        case JsSuccess(data, _) => {
+          boundary.signUp(data).map(user => {
+            Ok(Json.toJson(user))
+          })
         }
-        case Failure(e) => {
-          println(e)
-          BadRequest(Json.obj("message" -> "Essa senha é inválida por algum motivo"))
+        case JsError(errors) => {
+          println(errors)
+          Future.successful(InternalServerError("Brokennn"))
         }
       }
     }

@@ -1,21 +1,30 @@
 package model.transactions
 
+import play.api.libs.json.{Json, OWrites}
 import slick.lifted.MappedTo
 
 import java.time.Instant
 
 case class DeliveryMethod(value: String) extends MappedTo[String]
 
-case object Correios extends DeliveryMethod("Correios")
-case object JadLog extends DeliveryMethod("JadLog")
+object DeliveryMethod {
+  implicit val writes: OWrites[DeliveryMethod] = Json.writes[DeliveryMethod]
+}
+
+object Correios extends DeliveryMethod("Correios")
+object JadLog extends DeliveryMethod("JadLog")
 
 case class Sale(
-                 override val transactionId: Option[TransactionId],
-                 override val storeId: Int,
-                 override val createdAt: Instant,
-                 override val items: Option[Seq[Item]],
+                 transactionId: Option[TransactionId],
+                 storeId: Int,
+                 createdAt: Instant,
+                 items: Option[Seq[Item]],
                  id: Option[Int],
                  deliveryMethod: DeliveryMethod,
                  deliveryPrice: Double,
                  deliveryAddress: Address)
   extends Transaction(transactionId, storeId, createdAt, items)
+
+object Sale {
+  implicit val writes: OWrites[Sale] = Json.writes[Sale]
+}

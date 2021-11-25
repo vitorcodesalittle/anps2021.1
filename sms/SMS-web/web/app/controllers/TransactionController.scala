@@ -7,28 +7,21 @@ import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
 import play.api.mvc.{Action, BaseController, ControllerComponents}
 
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
-import scala.util.{Failure, Success}
+import scala.concurrent.{Await, ExecutionContext, Future}
 
 class TransactionController @Inject()(boundary: Facade, userAction: UserAction, val controllerComponents: ControllerComponents)(implicit ec: ExecutionContext)
   extends BaseController with play.api.i18n.I18nSupport {
 
-  //  val cashFlowForm: Form[CacheFlowRequestData] = ???
-
-  def doSale: Action[JsValue] = userAction(parse.json) {
+  def doSale: Action[JsValue] = userAction(parse.json).async {
     implicit request ⇒ {
       request.body.validate[SaleData] match {
-        case JsError(errors) ⇒ {
+        case JsError(errors) ⇒ Future {
           BadRequest(Json.obj("message" → JsError.toJson(errors)))
         }
         case JsSuccess(saleData, _) ⇒ {
-          boundary.doSale(saleData, request.userInfo) match {
-            case Success((transaction, sale, items)) ⇒ Ok(s"Venda registrada $transaction $sale $items")
-            case Failure(e) ⇒ {
-              println(e)
-              InternalServerError("Não foi possível registrar venda. Tente mais tarde")
-            }
-          }
+          boundary.doSale(saleData, request.userInfo) map (sale => Ok(Json.toJson(sale))) fallbackTo(Future {
+            InternalServerError(Json.obj("message" -> "Json inválido"))
+          })
         }
       }
     }

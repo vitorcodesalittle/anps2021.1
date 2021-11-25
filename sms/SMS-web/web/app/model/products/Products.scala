@@ -19,7 +19,10 @@ class Products(tag: Tag) extends Table[Product](tag, "PRODUCTS") {
 
   def store = foreignKey("STORE", storeId, stores)(_.id)
 
-  override def * = (id.?, name, suggestedPrice, stock, barcode, storeId) <> (Product.tupled, Product.unapply)
+  override def * = (id.?, name, suggestedPrice, stock, barcode, storeId) <> (row => {
+    val (id, name, suggestedPrice, stock, barcode, storeId) = row
+    Product(id, name, suggestedPrice, stock, barcode, storeId)
+  }, Product.unapply)
 
   lazy val stores = TableQuery[Stores]
 }

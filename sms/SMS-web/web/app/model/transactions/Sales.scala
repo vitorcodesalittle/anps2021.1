@@ -43,5 +43,4 @@ class Sales(tag: Tag) extends Table[Sale](tag, "SALES") {
     Some((s.id, s.transactionId, s.storeId, s.createdAt, s.deliveryMethod, s.deliveryPrice, f1(s.deliveryAddress)))
   })
 
-  lazy val transactions = TableQuery[Transactions]
 }

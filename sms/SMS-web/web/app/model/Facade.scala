@@ -24,9 +24,11 @@ class Facade @Inject()(userControl: UserControl, productControl: ProductControl,
 
   def login(loginData: LoginData): Future[(User, Cookie)] = userControl.login(loginData)
 
-  def getTransactions(userInfo: UserInfo): Future[Seq[(Transaction, Option[Sale], Option[Purchase], Seq[(Item, Product)])]] = transactionControl.getTransactions(userInfo)
+  def getTransactions(userInfo: UserInfo): Future[Seq[Transaction]] = transactionControl.getTransactions(userInfo)
 
-  def doSale(saleData: SaleData, userInfo: UserInfo): Future[(Transaction, Sale, Seq[Item])] = transactionControl.doSale(saleData, userInfo)
+  def getSales(userInfo: UserInfo): Future[Seq[Sale]] = transactionControl.getSales(userInfo)
 
-  def mountCashFlow(cacheFlowRequestData: CacheFlowRequestData, userInfo: UserInfo): Future[Seq[Option[(Transaction, Seq[Item])]]] = transactionControl.mountCashFlow(cacheFlowRequestData, userInfo)
+  def doSale(saleData: SaleData, userInfo: UserInfo): Future[Sale] = transactionControl.doSale(saleData, userInfo)
+
+  def mountCashFlow(cacheFlowRequestData: CacheFlowRequestData, userInfo: UserInfo): Future[Seq[Option[Transaction]]] = transactionControl.mountCashFlow(cacheFlowRequestData, userInfo)
 }

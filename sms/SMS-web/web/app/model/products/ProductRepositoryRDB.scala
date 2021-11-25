@@ -1,5 +1,6 @@
 package model.products
 
+import model.transactions.forms.ItemData
 import model.users.DBRunner
 import play.api.db.slick.DatabaseConfigProvider
 import slick.basic.DatabaseConfig
@@ -15,6 +16,10 @@ import scala.concurrent.{Await, ExecutionContext, Future}
 @Singleton
 class ProductRepositoryRDB @Inject()(override val dbConfigProvider: DatabaseConfigProvider, implicit val ec: ExecutionContext)
   extends DBRunner with ProductRepository {
+  def hasSufficientStock(items: Seq[ItemData]): DBIO[Boolean] = ???
+
+  def getPrices(ids: Seq[Int]): DBIO[Seq[Double]] = ???
+
   override val dbConfig: DatabaseConfig[PostgresProfile] = dbConfigProvider.get[PostgresProfile]
   override val db = dbConfig.db
   val products = TableQuery[Products]

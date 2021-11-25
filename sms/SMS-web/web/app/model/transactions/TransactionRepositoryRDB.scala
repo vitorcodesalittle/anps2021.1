@@ -20,37 +20,47 @@ class TransactionRepositoryRDB @Inject()(override val dbConfigProvider: Database
   extends DBRunner with TransactionRepository {
   override val dbConfig = dbConfigProvider.get[PostgresProfile]
   override val db = dbConfig.db
-  val transactions = TableQuery[Transactions]
   val sales = TableQuery[Sales]
   val purchases = TableQuery[Purchases]
   val allItems = TableQuery[Items]
   val products = TableQuery[Products]
 
-  Await.ready(db.run(DBIO.sequence(Seq(purchases.schema.create, allItems.schema.create, transactions.schema.create, sales.schema.create))), Duration.Inf)
+  Await.ready(db.run(DBIO.sequence(Seq(purchases.schema.create, allItems.schema.create, sales.schema.create))), Duration.Inf)
 
-  def mountSales(sales: Seq[(Sale, Item, Product)]): Seq[Sale] = ???
-
-  def getAllTransactionsGood(storeId: Int): DBIO[Seq[Sale]] = {
-    (for {
-      ss <- sales .filter(_.storeId === storeId)
-      items <- allItems if (ss.transactionId === items.transactionId)
-      products <- products if (items.productId === products.id)
-    } yield (ss, items, products)).result.map(mountSales)
+  private def mountSales(sales: Seq[(Sale, Item, Product)]): Seq[Sale] = {
+    sales.foldLeft(Map[Int, Sale]())((acc, tuple) => {
+      val (sale, item, product) = tuple
+      if (acc contains sale.id.get) {
+        val updated = sale.copy(items = Some(sale.items.get :+ item.copy(product = Some(product))))
+        acc + (sale.id.get -> updated)
+      } else {
+        acc + (sale.id.get -> sale.copy(items=Some(Seq())))
+      }
+    }).values.toSeq
   }
 
-  val stuff: Future[Seq[(TransactionId, _root_.slick.jdbc.PostgresProfile.api.Query[(Sales, (Items, Products)), (Sale, (Item, Product)), Seq])]] = db.run(getAllTransactionsGood(1))
-  val ahaha = stuff map (data => {
-    val d = data.map(d => {
-      (d._1, d._2.)
-    })
-  })
-
+  def getAllSales(storeId: Int): DBIO[Seq[Sale]] = {
+    (for {
+      ss <- sales.filter(_.storeId === storeId)
+      its <- allItems if (ss.transactionId === its.transactionId)
+      ps <- products if (its.productId === ps.id)
+    } yield (ss, its, ps)).result.map(mountSales)
+  }
 
   override def getTransactions(storeId: Int, since: Instant, to: Instant): DBIO[Seq[Transaction]] = ???
 
-  override def createSale(sale: Sale): DBIO[Sale] = ???
+  override def createSale(sale: Sale): DBIO[Sale] = {
+    for {
+      sale <- sales returning sales.map(sale => (sale.id, sale.transactionId)) into ((sale, pair) => sale.copy(id = Some(pair._1), transactionId = Some(pair._2))) += sale
+      items <- allItems returning allItems.map(_.id) into ((item, itemId) => item.copy(id = Some(itemId))) ++= sale.items.get
+    } yield sale.copy(items = Some(items))
+  }
 
   override def createPurchase(purchase: Purchase): DBIO[Purchase] = ???
 
   override def deleteTransaction(transactionId: Int): DBIO[Int] = ???
+
+  override def getAllTransactions(storeId: Int): DBIO[Seq[Transaction]] = ???
+
+  override def getAllPurchases(storeId: Int): DBIO[Seq[Purchase]] = ???
 }
