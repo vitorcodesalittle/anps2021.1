@@ -3,12 +3,10 @@ package model.transactions
 import model.products.{Product, Products}
 import model.users.DBRunner
 import play.api.db.slick.DatabaseConfigProvider
-import slick.dbio.{DBIO, Effect}
-import slick.jdbc
+import slick.dbio.{DBIO}
 import slick.jdbc.PostgresProfile
 import slick.jdbc.PostgresProfile.api._
 import slick.lifted.TableQuery
-import slick.sql.FixedSqlStreamingAction
 
 import java.time.Instant
 import javax.inject.{Inject, Singleton}
@@ -16,10 +14,10 @@ import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext, Future}
 
 @Singleton
-class TransactionRepositoryRDB @Inject()(override val dbConfigProvider: DatabaseConfigProvider, implicit val ec: ExecutionContext)
-  extends DBRunner with TransactionRepository {
+class TransactionRepositoryRDB @Inject()(dbConfigProvider: DatabaseConfigProvider, implicit val ec: ExecutionContext)
+  extends DBRunner(dbConfigProvider) with TransactionRepository {
   override val dbConfig = dbConfigProvider.get[PostgresProfile]
-  override val db = dbConfig.db
+  override lazy val db = dbConfig.db
   val sales = TableQuery[Sales]
   val purchases = TableQuery[Purchases]
   val allItems = TableQuery[Items]

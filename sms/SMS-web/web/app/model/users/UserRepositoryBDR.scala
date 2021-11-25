@@ -11,19 +11,19 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext, Future}
 
-abstract class DBRunner {
-  val dbConfigProvider: DatabaseConfigProvider
+
+abstract class DBRunner @Inject() (dbConfigProvider: DatabaseConfigProvider) {
   val dbConfig = dbConfigProvider.get[PostgresProfile]
-  val db = dbConfig.db
+  lazy val db = dbConfig.db
   def run[R, S <: NoStream, T <: Effect](action: DBIOAction[R, S, T]) = {
     db.run(action)
   }
 }
 
 @Singleton
-class UserRepositoryBDR @Inject()(override val dbConfigProvider: DatabaseConfigProvider, implicit val ec: ExecutionContext) extends DBRunner with UserRepository {
+class UserRepositoryBDR @Inject()(dbConfigProvider: DatabaseConfigProvider, implicit val ec: ExecutionContext) extends DBRunner(dbConfigProvider) with UserRepository {
   override val dbConfig: DatabaseConfig[PostgresProfile] = dbConfigProvider.get[PostgresProfile]
-  override val db = dbConfig.db
+  override lazy val db = dbConfig.db
   val users = TableQuery[Users]
 
   def getAll: Future[Seq[User]] = db run users.result

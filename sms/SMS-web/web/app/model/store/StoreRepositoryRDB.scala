@@ -12,10 +12,10 @@ import javax.inject.Inject
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext, Future}
 
-class StoreRepositoryRDB @Inject()(override implicit val dbConfigProvider: DatabaseConfigProvider, implicit val ec: ExecutionContext) extends DBRunner with StoreRepository {
+class StoreRepositoryRDB @Inject()(dbConfigProvider: DatabaseConfigProvider, implicit val ec: ExecutionContext) extends DBRunner(dbConfigProvider) with StoreRepository {
 
   override val dbConfig: DatabaseConfig[PostgresProfile] = dbConfigProvider.get[PostgresProfile]
-  override val db = dbConfig.db
+  override lazy val db = dbConfig.db
 
   val stores = TableQuery[Stores]
 
