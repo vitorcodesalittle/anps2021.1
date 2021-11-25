@@ -37,7 +37,6 @@ class UserController @Inject()(val controllerComponents: ControllerComponents, b
 
   def signUp(): Action[JsValue] = Action(parse.json).async {
     implicit request => {
-      println(request.body.toString)
       request.body.validate[SignUpData] match{
         case JsSuccess(data, _) => {
           boundary.signUp(data).map(user => {
