@@ -1,17 +1,17 @@
 import React from 'react'
 
 interface TransactionCardProps {
-    transaction: Sale | Purchase
+    transaction: Sale | Purchase;
 }
 
 function TransactionCard(props: TransactionCardProps) {
 
-    return (
-        <div>
+  return (
+    <div>
             this will be a transaction
-            <pre>{JSON.stringify(props.transaction)}</pre>
-        </div>
-    )
+      <pre>{JSON.stringify(props.transaction)}</pre>
+    </div>
+  )
 }
 
 export default TransactionCard

@@ -7,8 +7,8 @@ import { getProducts as apiGetProducts, createProduct as apiCreateProduct } from
 
 
 const defaultProductData = (): ProductData => ({
-  name: "",
-  barcode: "",
+  name: '',
+  barcode: '',
   stock: 50,
   suggestedPrice: 10.00
 })
@@ -43,26 +43,26 @@ function Products() {
 
   const ProductDataSchema: Schema<ProductData> = {
     name: {
-      label: "Name",
-      htmlType: "text",
+      label: 'Name',
+      htmlType: 'text',
       order: 0,
       onChange: (data, value) => ({...data, name: value}),
     },
     stock: {
-      label: "Initial stock",
-      htmlType: "text",
+      label: 'Initial stock',
+      htmlType: 'text',
       onChange: (data, value) => ({...data, stock: parseInt(value, 10)}),
       order: 1
     },
     suggestedPrice: {
-      label: "Price",
-      htmlType: "number",
+      label: 'Price',
+      htmlType: 'number',
       order: 2,
       onChange: (data, value) => ({...data, suggestedPrice: parseInt(value, 10)})
     },
     barcode: {
-      label: "Barcode",
-      htmlType: "text",
+      label: 'Barcode',
+      htmlType: 'text',
       order: 3,
       onChange: (data, value) => ({...data, barcode: value})
     }

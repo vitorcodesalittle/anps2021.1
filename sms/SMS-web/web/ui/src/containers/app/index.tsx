@@ -25,7 +25,7 @@ export default function App() {
           </Routes>
         </Router>
       </ProductsContextProvider>
-   </div>
+    </div>
   )
 
 }

@@ -15,8 +15,8 @@ const defaultFlowRequest = (): MountCashFlowRequest => {
   }
 }
 function Transactions() {
-  const [ transactions, setTransactions ] = useState<(Sale | Purchase)[]>([])
-  const [ flowRequest, setFlowRequest ] = useState<MountCashFlowRequest>(defaultFlowRequest())
+  const [ transactions,  ] = useState<(Sale | Purchase)[]>([])
+  const [ flowRequest,  ] = useState<MountCashFlowRequest>(defaultFlowRequest())
   const createSale = (saleData: SaleData) => apiCreateSale(saleData).then(console.log).catch(console.error)
   const getTransactions = (flowRequest: MountCashFlowRequest) => apiGetTransactions()
 
@@ -26,14 +26,14 @@ function Transactions() {
 
   const FlowRequestSchema: Schema<MountCashFlowRequest> = {
     fromDate: {
-      htmlType: "date",
-      label: "Desde",
+      htmlType: 'date',
+      label: 'Desde',
       order: 0,
       onChange: (data, value) => ({ ...data, fromDate: new Date(value) })
     },
     toDate: {
-      htmlType: "date",
-      label: "Até",
+      htmlType: 'date',
+      label: 'Até',
       order: 1,
       onChange: (data, value) => ({...data, toDate: new Date(value)})
     }

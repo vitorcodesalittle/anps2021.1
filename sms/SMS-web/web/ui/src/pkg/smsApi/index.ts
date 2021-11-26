@@ -1,8 +1,8 @@
 import axios from 'axios'
 
 const api = axios.create({
-    withCredentials: true,
-    baseURL: "/api"
+  withCredentials: true,
+  baseURL: '/api'
 })
 
 export const login = (data: LoginData) => api.post('/login', data)
@@ -17,5 +17,5 @@ export const getTransactions = () => api.get('/transactions')
 export const createSale = (saleData: SaleData) => api.post('/sales', saleData)
 
 export const mountCashFlow = (request: MountCashFlowRequest) => {
-    throw new Error('Not implemented')
+  throw new Error('Not implemented')
 }

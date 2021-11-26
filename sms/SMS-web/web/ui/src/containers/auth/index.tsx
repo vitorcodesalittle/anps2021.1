@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Form from '../../components/form'
 import { fail, Schema, success } from '../../pkg/form'
 import { getProducts, login, signUp } from '../../pkg/smsApi'
@@ -20,98 +20,98 @@ const defaultSignUpData = (): SignUpDataWithConfirmPassword => ({
   confirmPassword: ''
 })
 const LoginSchema: Schema<LoginData> = {
-    email: {
-        type: "text",
-        htmlType: "text",
-        label: "Email",
-        validate: (data, value) => {
-            if (value === "") return fail("Email cannot be empty")
-            return success()
-        },
-        onChange: (data, value) => ({...data, email: value}),
-        order: 0
+  email: {
+    type: 'text',
+    htmlType: 'text',
+    label: 'Email',
+    validate: (data, value) => {
+      if (value === '') return fail('Email cannot be empty')
+      return success()
     },
-    password: {
-        htmlType: "password",
-        type: "text",
-        label: "Password",
-        validate: (data, value) => {
-            if (value === "") return fail("Password cannot be empty")
-            return success()
-        },
-        onChange: (data, value) => ({...data, password: value}),
-        order: 1
-    }
+    onChange: (data, value) => ({...data, email: value}),
+    order: 0
+  },
+  password: {
+    htmlType: 'password',
+    type: 'text',
+    label: 'Password',
+    validate: (data, value) => {
+      if (value === '') return fail('Password cannot be empty')
+      return success()
+    },
+    onChange: (data, value) => ({...data, password: value}),
+    order: 1
+  }
 }
 
 const SignUpSchema: Schema<SignUpDataWithConfirmPassword> = {
-    email: {
-        type: "text",
-        htmlType: "text",
-        label: "Email",
-        validate: (data, value) => {
-            if (value === "") return fail("Email cannot be empty")
-            return success()
-        },
-        onChange: (data, value) => ({...data, email: value}),
-        order: 0
+  email: {
+    type: 'text',
+    htmlType: 'text',
+    label: 'Email',
+    validate: (data, value) => {
+      if (value === '') return fail('Email cannot be empty')
+      return success()
     },
-    password: {
-        htmlType: "password",
-        type: "text",
-        label: "Password",
-        validate: (data, value) => {
-            if (value === "") return fail("Password cannot be empty")
-            return success()
-        },
-        onChange: (data, value) => ({...data, password: value}),
-        order: 1
+    onChange: (data, value) => ({...data, email: value}),
+    order: 0
+  },
+  password: {
+    htmlType: 'password',
+    type: 'text',
+    label: 'Password',
+    validate: (data, value) => {
+      if (value === '') return fail('Password cannot be empty')
+      return success()
     },
-    name: {
-        type: "text",
-        htmlType: "text",
-        label: "Name",
-        validate: (data, value) => {
-            if (value === "") return fail("Email cannot be empty")
-            return success()
-        },
-        onChange: (data, value) => ({...data, name: value}),
-        order: 0
+    onChange: (data, value) => ({...data, password: value}),
+    order: 1
+  },
+  name: {
+    type: 'text',
+    htmlType: 'text',
+    label: 'Name',
+    validate: (data, value) => {
+      if (value === '') return fail('Email cannot be empty')
+      return success()
     },
-    storeName: {
-        type: "text",
-        htmlType: "text",
-        label: "Store Name",
-        validate: (data, value) => {
-            if (value === "") return fail("Email cannot be empty")
-            return success()
-        },
-        onChange: (data, value) => ({...data, storeName: value}),
-        order: 0
+    onChange: (data, value) => ({...data, name: value}),
+    order: 0
+  },
+  storeName: {
+    type: 'text',
+    htmlType: 'text',
+    label: 'Store Name',
+    validate: (data, value) => {
+      if (value === '') return fail('Email cannot be empty')
+      return success()
     },
-    confirmPassword:{
-        htmlType: "password",
-        type: "text",
-        label: "Confirm Password",
-        validate: (data, value) => {
-            if (value !== data.password) return fail("'Password' and 'Confirm Password' are not equals")
-            return success()
-        },
-        onChange: (data, value) => ({...data, confirmPassword: value}),
-        order: 1
-    }
+    onChange: (data, value) => ({...data, storeName: value}),
+    order: 0
+  },
+  confirmPassword:{
+    htmlType: 'password',
+    type: 'text',
+    label: 'Confirm Password',
+    validate: (data, value) => {
+      if (value !== data.password) return fail('\'Password\' and \'Confirm Password\' are not equals')
+      return success()
+    },
+    onChange: (data, value) => ({...data, confirmPassword: value}),
+    order: 1
+  }
 }
 
 function Auth() {
   const handleLogin = (loginData: LoginData) => {
     login(loginData)
-        .then(console.log)
-        .catch(console.error)
+      .then(console.log)
+      .catch(console.error)
   }
   const handleCreateAccount = (signUpData: SignUpDataWithConfirmPassword) => {
-      signUp(signUpData)
-        .then(console.log)
-        .catch(console.error)
+    signUp(signUpData)
+      .then(console.log)
+      .catch(console.error)
   }
   return <div>
     <div>
@@ -121,7 +121,7 @@ function Auth() {
     </div>
     <div>
       <h2>Register</h2>
-        <Form<SignUpDataWithConfirmPassword> schema={SignUpSchema} onSubmit={handleCreateAccount} submitLabel="Create Account" initialState={defaultSignUpData()}/>
+      <Form<SignUpDataWithConfirmPassword> schema={SignUpSchema} onSubmit={handleCreateAccount} submitLabel="Create Account" initialState={defaultSignUpData()}/>
     </div>
   </div>
 }
