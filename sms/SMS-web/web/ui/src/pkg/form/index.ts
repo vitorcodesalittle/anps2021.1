@@ -4,7 +4,7 @@ export type PropertyValidator<T, P> = (data: T, value: P) => Either<string, bool
 export type SchemaProperty<T, P> = {
     validate?: PropertyValidator<T, P>,
     type?: "text" | "number";
-    htmlType: "text" | "password" | "number";
+    htmlType: "text" | "password" | "number" | "date";
     label: string;
     order: number;
     onChange: (data: T, value: string) => T

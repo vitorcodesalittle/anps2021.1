@@ -3,7 +3,7 @@ interface ProductCardProps {
   children?: React.ReactNode
   product: Product
 }
-function ProductCard(props: ProductCardProps) {
+const ProductCard: React.FC<ProductCardProps> = function (props) {
   const { product: {name, suggestedPrice, stock} } = props
   return (
     <div>
@@ -20,6 +20,7 @@ function ProductCard(props: ProductCardProps) {
           </div>
         </div>
       </div>
+      {props.children}
     </div>
   )
 }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Form from '../../components/form'
 import { fail, Schema, success } from '../../pkg/form'
-import { getProducts, login, signUp } from '../../pkg/smsApi/api'
+import { getProducts, login, signUp } from '../../pkg/smsApi'
 
 type SignUpDataWithConfirmPassword = SignUpData & {
     confirmPassword: string;

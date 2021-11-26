@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import Content from '../../components/content'
-import ProductCard from '../../components/product-catd'
+import ProductCard from '../../components/product-card'
 import { Schema } from '../../pkg/form'
 import Form from '../../components/form'
-import { getProducts as apiGetProducts, createProduct as apiCreateProduct } from '../../pkg/smsApi/api'
+import { getProducts as apiGetProducts, createProduct as apiCreateProduct } from '../../pkg/smsApi'
 
 
 const defaultProductData = (): ProductData => ({
@@ -57,7 +57,6 @@ function Products() {
     suggestedPrice: {
       label: "Price",
       htmlType: "number",
-      numberStep: "0.1",
       order: 2,
       onChange: (data, value) => ({...data, suggestedPrice: parseInt(value, 10)})
     },

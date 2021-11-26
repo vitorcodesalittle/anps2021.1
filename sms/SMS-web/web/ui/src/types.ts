@@ -36,20 +36,34 @@ type Item = {
 }
 
 type Transaction = {
-  id: number;
+  transactionId: number;
   createdAt: Date;
   items: Item[];
 }
 
 type DeliveryMethod = 'correios' | 'jadlog' | 'motoboy' | 'sedex'
 
+type ItemData = {
+  productId: number
+  quantity: number
+}
+type SaleData = {
+  deliveryMethod: DeliveryMethod
+  items: ItemData[]
+}
+
 type Sale = {
   transaction: Transaction;
   deliveryMethod: DeliveryMethod;
   deliveryPrice: number;
+} & Transaction
+
+type MountCashFlowRequest = {
+  fromDate: Date,
+  toDate: Date
 }
 
-
+type Purchase = Transaction
 
 type SignUpData = {
   email: string;
