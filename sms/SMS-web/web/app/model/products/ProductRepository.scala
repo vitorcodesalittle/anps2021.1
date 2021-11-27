@@ -1,5 +1,6 @@
 package model.products
 
+import model.transactions.forms.ItemData
 import slick.dbio.DBIO
 
 trait ProductRepository {
@@ -9,11 +10,13 @@ trait ProductRepository {
 
   def getByName(name: String): DBIO[Product]
 
-  def getById(id: Int): DBIO[Product]
+  def getById(id: Seq[Int]): DBIO[Seq[Product]]
 
   def create(product: Product): DBIO[Product]
 
   def update(productUpdate: Product): DBIO[Product]
 
   def remove(id: Int): DBIO[Int]
+
+  def decrementStock(items: Seq[ItemData]): DBIO[Unit]
 }

@@ -3,11 +3,11 @@ package model.transactions
 import model.products.ProductRepositoryRDB
 import model.services.session.UserInfo
 import model.transactions.forms.{CacheFlowRequestData, SaleData}
+import slick.dbio.DBIO
 
 import java.time.Instant
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Try
 
 @Singleton
 class TransactionControl @Inject()(repo: TransactionRepositoryRDB, productsRepo: ProductRepositoryRDB, implicit val ec: ExecutionContext) {
@@ -15,22 +15,29 @@ class TransactionControl @Inject()(repo: TransactionRepositoryRDB, productsRepo:
     repo.run(repo.getAllSales(userInfo.storeId))
   }
 
+
   def getTransactions(userInfo: UserInfo): Future[Seq[Transaction]] = {
     repo.run(repo.getAllTransactions(userInfo.storeId))
   }
 
   def doSale(saleData: SaleData, userInfo: UserInfo): Future[Sale] = {
-    println(saleData, userInfo)
     productsRepo.run(for {
-//      ok <- productsRepo.hasSufficientStock(saleData.items)
-//      if ok
-      prices <- productsRepo.getPrices(saleData.items.map(_.productId))
+      products <- productsRepo.getById(saleData.items.map(_.productId))
+      hasSufficientStock <- DBIO.from(Future {
+        (products zip saleData.items).foldLeft(false)((acc, pair) => {
+          val (product, item) = pair
+          acc && (product.stock >= item.quantity)
+        })
+      })
+      if hasSufficientStock
+      prices <- DBIO.from(Future{ products.map(_.suggestedPrice)})
       sale <- repo.createSale(
         Sale(None, userInfo.storeId, Instant.now(), Some((saleData.items zip prices).map(pair => {
           val (itemData, price) = pair
           Item(None, None, itemData.productId, itemData.quantity, price, None)
         })), None, DeliveryMethod(saleData.deliveryMethod), 3.3, saleData.deliveryAddress)
       )
+      _ <- productsRepo.decrementStock(saleData.items)
     } yield sale)
   }
 

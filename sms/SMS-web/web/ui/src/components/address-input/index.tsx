@@ -25,12 +25,12 @@ function AddressInput(props: AddressInputProps) {
   return (
     <>
       <Input label={'País'} type="text" onChange={changeHandler('country')}/>
-      <Input label={'Cidade'} type="text" onChange={changeHandler('country')}/>
-      <Input label={'CEP'} type="text" onChange={changeHandler('country')}/>
-      <Input label={'Estado'} type="text" onChange={changeHandler('country')}/>
-      <Input label={'Province'} type="text" onChange={changeHandler('country')}/>
-      <Input label={'Rua'} type="text" onChange={changeHandler('country')}/>
-      <Input label={'Extra'} type="text" onChange={changeHandler('country')}/>
+      <Input label={'Cidade'} type="text" onChange={changeHandler('city')}/>
+      <Input label={'CEP'} type="text" onChange={changeHandler('cep')}/>
+      <Input label={'Estado'} type="text" onChange={changeHandler('state')}/>
+      <Input label={'Province'} type="text" onChange={changeHandler('province')}/>
+      <Input label={'Rua'} type="text" onChange={changeHandler('street')}/>
+      <Input label={'Extra'} type="text" onChange={changeHandler('extra')}/>
 
     </>
   )

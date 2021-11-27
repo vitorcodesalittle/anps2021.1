@@ -8,7 +8,7 @@ import java.time.Instant
 class Sales(tag: Tag) extends Table[Sale](tag, "SALES") {
   def id: Rep[Int] = column[Int]("ID", O.PrimaryKey, O.AutoInc)
 
-  def transactionId: Rep[TransactionId] = column[TransactionId]("TRANSACTION_ID")
+  def transactionId: Rep[TransactionId] = column[TransactionId]("TRANSACTION_ID", O.AutoInc)
 
   def storeId: Rep[Int] = column[Int]("STORE_ID")
 

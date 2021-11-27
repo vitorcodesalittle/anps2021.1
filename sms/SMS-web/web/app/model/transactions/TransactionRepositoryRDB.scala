@@ -45,12 +45,12 @@ class TransactionRepositoryRDB @Inject()(dbConfigProvider: DatabaseConfigProvide
     } yield (ss, its, ps)).result.map(mountSales)
   }
 
-  override def getTransactions(storeId: Int, since: Instant, to: Instant): DBIO[Seq[Transaction]] = ???
+  override def getTransactions(storeId: Int, since: Instant, to: Instant): DBIO[Seq[Sale]] = ???
 
   override def createSale(sale: Sale): DBIO[Sale] = {
     for {
       sale <- sales returning sales.map(sale => (sale.id, sale.transactionId)) into ((sale, pair) => sale.copy(id = Some(pair._1), transactionId = Some(pair._2))) += sale
-      items <- allItems returning allItems.map(_.id) into ((item, itemId) => item.copy(id = Some(itemId))) ++= sale.items.get
+      items <- allItems returning allItems.map(_.id) into ((item, itemId) => item.copy(id = Some(itemId))) ++= (sale.items.get.map(item => item.copy(transactionId = sale.transactionId)))
     } yield sale.copy(items = Some(items))
   }
 
@@ -58,7 +58,7 @@ class TransactionRepositoryRDB @Inject()(dbConfigProvider: DatabaseConfigProvide
 
   override def deleteTransaction(transactionId: Int): DBIO[Int] = ???
 
-  override def getAllTransactions(storeId: Int): DBIO[Seq[Transaction]] = ???
+  override def getAllTransactions(storeId: Int): DBIO[Seq[Sale]] = ???
 
   override def getAllPurchases(storeId: Int): DBIO[Seq[Purchase]] = ???
 }

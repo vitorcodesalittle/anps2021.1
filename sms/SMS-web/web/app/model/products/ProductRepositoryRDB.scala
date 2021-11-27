@@ -16,12 +16,26 @@ import scala.concurrent.{Await, ExecutionContext, Future}
 @Singleton
 class ProductRepositoryRDB @Inject()(dbConfigProvider: DatabaseConfigProvider, implicit val ec: ExecutionContext)
   extends DBRunner(dbConfigProvider) with ProductRepository {
-  def hasSufficientStock(items: Seq[ItemData]): DBIO[Boolean] = ???
-
 
   override val dbConfig: DatabaseConfig[PostgresProfile] = dbConfigProvider.get[PostgresProfile]
   override lazy val db = dbConfig.db
   val products = TableQuery[Products]
+
+  override def decrementStock(items: Seq[ItemData]): DBIO[Unit] = {
+    val idsAndStocks = for {
+      ps <- getById(items.map(_.productId))
+      prices <- DBIO.from(Future {(ps zip items).map((pair) => {
+        val (p, i) = pair
+        p.stock - i.quantity
+      })})
+    } yield ps map (_.id) zip prices
+    idsAndStocks.map((result) => DBIO.sequence(
+      result.map((pair) => {
+        val (Some(id), newStock) = pair
+        products.filter(_.id === id).map(_.stock).update(newStock)
+      })
+    ))
+  }
 
   override def getAll(): DBIO[Seq[Product]] = products.result
 
@@ -35,12 +49,23 @@ class ProductRepositoryRDB @Inject()(dbConfigProvider: DatabaseConfigProvider, i
 
   override def getByName(name: String): DBIO[Product] = ???
 
-  override def getById(id: Int): DBIO[Product] = ???
+  override def getById(ids: Seq[Int]): DBIO[Seq[Product]] = {
+    products.filter(_.id.inSet(ids)).result
+  }
 
 
-  def getPrices(ids: Seq[Int]): DBIO[Seq[Double]] = DBIO.from( Future {
-    ids map ((id) => 3.33)
-  })
+  def getPrices(ids: Seq[Int]): DBIO[Seq[Double]] = {
+    products.filter(_.id.inSet(ids)).map(_.suggestedPrice).result
+  }
+
+  def hasSufficientStock(items: Seq[ItemData]): DBIO[Boolean] = {
+    for {
+      ps <- products.filter(_.id.inSet(items.map(_.productId))).result
+      valid <- DBIO.from( Future {
+        (ps zip items).foldLeft(false)((acc, value) => acc && (value._1.stock >= value._2.quantity))
+      })
+    } yield valid
+  }
 
   override def update(productUpdate: Product): DBIO[Product] = ???
 
