@@ -23,14 +23,15 @@ class TransactionControl @Inject()(repo: TransactionRepositoryRDB, productsRepo:
   def doSale(saleData: SaleData, userInfo: UserInfo): Future[Sale] = {
     productsRepo.run(for {
       products <- productsRepo.getById(saleData.items.map(_.productId))
-      hasSufficientStock <- DBIO.from(Future {
-        (products zip saleData.items).foldLeft(false)((acc, pair) => {
+      hasSufficientStock <- DBIO.successful(
+        (products zip saleData.items).foldLeft(true)((acc, pair) => {
           val (product, item) = pair
+          println(product.stock - item.quantity)
           acc && (product.stock >= item.quantity)
         })
-      })
+      )
       if hasSufficientStock
-      prices <- DBIO.from(Future{ products.map(_.suggestedPrice)})
+      prices <- DBIO.successful(products.map(_.suggestedPrice))
       sale <- repo.createSale(
         Sale(None, userInfo.storeId, Instant.now(), Some((saleData.items zip prices).map(pair => {
           val (itemData, price) = pair
