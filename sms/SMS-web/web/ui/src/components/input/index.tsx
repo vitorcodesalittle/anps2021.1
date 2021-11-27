@@ -1,7 +1,7 @@
 import React from 'react'
 
 interface InputProps {
-  key:string;
+  key?:string;
   step?: string;
   label: string;
   type: string;

@@ -5,7 +5,7 @@ export type PropertyValidator<T, P> = (data: T, value: P) => Either<string, bool
 export type SchemaProperty<T, P, H, C extends FC<{onChange: (h: H) => any}>> = {
     validate?: PropertyValidator<T, P>;
     type?: 'text' | 'number';
-    htmlType: 'text' | 'password' | 'number' | 'date';
+    htmlType?: 'text' | 'password' | 'number' | 'date';
     label: string;
     order: number;
     render?: C;

@@ -47,7 +47,19 @@ type ItemData = {
   productId: number;
   quantity: number;
 }
+
+type Address = {
+  country?: string;
+  state?: string;
+  city?: string;
+  province?: string;
+  cep?: string;
+  extra?: string;
+  street?: string;
+}
+
 type SaleData = {
+  deliveryAddress: Address;
   deliveryMethod: DeliveryMethod;
   items: ItemData[];
 }

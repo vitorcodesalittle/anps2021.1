@@ -14,13 +14,14 @@ class TransactionController @Inject()(boundary: Facade, userAction: UserAction, 
 
   def doSale: Action[JsValue] = userAction(parse.json).async {
     implicit request ⇒ {
+      println(request.body.toString)
       request.body.validate[SaleData] match {
         case JsError(errors) ⇒ Future {
           BadRequest(Json.obj("message" → JsError.toJson(errors)))
         }
         case JsSuccess(saleData, _) ⇒ {
           boundary.doSale(saleData, request.userInfo) map (sale => Ok(Json.toJson(sale))) fallbackTo(Future {
-            InternalServerError(Json.obj("message" -> "Json inválido"))
+            InternalServerError(Json.obj("message" -> "Erro ao criar venda. tente mais tarde"))
           })
         }
       }

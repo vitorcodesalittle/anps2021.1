@@ -20,9 +20,10 @@ class TransactionControl @Inject()(repo: TransactionRepositoryRDB, productsRepo:
   }
 
   def doSale(saleData: SaleData, userInfo: UserInfo): Future[Sale] = {
+    println(saleData, userInfo)
     productsRepo.run(for {
-      ok <- productsRepo.hasSufficientStock(saleData.items)
-      if ok
+//      ok <- productsRepo.hasSufficientStock(saleData.items)
+//      if ok
       prices <- productsRepo.getPrices(saleData.items.map(_.productId))
       sale <- repo.createSale(
         Sale(None, userInfo.storeId, Instant.now(), Some((saleData.items zip prices).map(pair => {

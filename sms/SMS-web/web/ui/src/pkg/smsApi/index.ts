@@ -14,7 +14,10 @@ export const createProduct = (productData: ProductData) => api.post('/products',
 
 export const getTransactions = () => api.get('/transactions')
 
-export const createSale = (saleData: SaleData) => api.post('/sales', saleData)
+export const createSale = (saleData: SaleData) => api.post('/sales', saleData).then(response => {
+  console.log('Finished request. Here is the response', response)
+  return response
+})
 
 export const mountCashFlow = (request: MountCashFlowRequest) => {
   throw new Error('Not implemented')

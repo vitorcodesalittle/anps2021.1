@@ -18,7 +18,6 @@ class ProductRepositoryRDB @Inject()(dbConfigProvider: DatabaseConfigProvider, i
   extends DBRunner(dbConfigProvider) with ProductRepository {
   def hasSufficientStock(items: Seq[ItemData]): DBIO[Boolean] = ???
 
-  def getPrices(ids: Seq[Int]): DBIO[Seq[Double]] = ???
 
   override val dbConfig: DatabaseConfig[PostgresProfile] = dbConfigProvider.get[PostgresProfile]
   override lazy val db = dbConfig.db
@@ -38,6 +37,10 @@ class ProductRepositoryRDB @Inject()(dbConfigProvider: DatabaseConfigProvider, i
 
   override def getById(id: Int): DBIO[Product] = ???
 
+
+  def getPrices(ids: Seq[Int]): DBIO[Seq[Double]] = DBIO.from( Future {
+    ids map ((id) => 3.33)
+  })
 
   override def update(productUpdate: Product): DBIO[Product] = ???
 
