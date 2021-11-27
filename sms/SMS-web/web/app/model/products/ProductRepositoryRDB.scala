@@ -25,10 +25,10 @@ class ProductRepositoryRDB @Inject()(dbConfigProvider: DatabaseConfigProvider, i
     println("DECREMENTING", items)
     val idsAndStocks = for {
       ps <- getById(items.map(_.productId))
-      stocks <- DBIO.from(Future {(ps zip items).map((pair) => {
+      stocks <- DBIO.successful((ps zip items).map((pair) => {
         val (p, i) = pair
         p.stock - i.quantity
-      })})
+      }))
     } yield ps map (_.id) zip stocks
     idsAndStocks.map(result => DBIO.sequence(
       result.map(pair => {
