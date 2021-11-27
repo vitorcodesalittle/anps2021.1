@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Schema, SchemaProperty } from '../../pkg/form'
+import Input from '../input'
 
 interface FormProps<T extends Record<string, unknown>> { 
   schema: Schema<T>;
@@ -8,50 +9,27 @@ interface FormProps<T extends Record<string, unknown>> {
   initialState: T;
   children?: React.ReactElement;
 }
-
-interface InputProps {
-  key:string;
-  step?: string;
-  label: string;
-  type: string;
-  onChange: React.ChangeEventHandler<HTMLInputElement>;
-}
-
-const Input = ({key, label, type, onChange, step}: InputProps) => {
-  return (
-    <div key={key}>
-      <label>{label}</label>
-      <input type={type} step={type === 'number' ? step || '1' : undefined} name={key} onChange={(event) => onChange(event)}></input>
-    </div>
-  )
-}
-
 const Form = <T extends Record<string, unknown>> (props: FormProps<T>) => {
   const { schema, initialState, submitLabel, onSubmit} = props
   const [data, setData] = useState<T>(initialState)
 
   const nodes = Object.entries(schema).map(([key, value]) => {
-    const valueAsProp = value as SchemaProperty<T, any>
-    return [key, valueAsProp] as [string, SchemaProperty<T, any>]
+    const valueAsProp = value as SchemaProperty<T, any, any, any>
+    return [key, valueAsProp] as [string, SchemaProperty<T, any, any, any>]
   })
     .sort(([_, value]) => value.order)
     .map(([key, value]) => {
+      if (value.render) return <value.render onChange={event => setData(value.onChange(data, event))}/>
       return <Input key={key} type={value.htmlType} label={value.label} onChange={event => setData(value.onChange(data, event.target.value))}/>
     })
-  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
-    event.preventDefault()
+  const handleSubmit = () => {
     onSubmit(data)
   }
 
-  useEffect(() => {
-    console.log('form changed:')
-    console.log(data)
-  }, [data])
-
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={event => event.preventDefault()}>
       {nodes}
-      <button>{submitLabel}</button>
+      <button onClick={() => handleSubmit()}>{submitLabel}</button>
     </form>
   )
 

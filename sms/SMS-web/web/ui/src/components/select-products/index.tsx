@@ -45,7 +45,11 @@ const ItemEdit: React.FC<ItemEditProps> = function (props) {
   )
 }
 
-function SelectItems() {
+interface SelectItemsProps {
+  onChange: (items: ItemData[]) => void;
+}
+function SelectItems(props: SelectItemsProps) {
+  const {onChange} = props
   const {getProducts, products, loading, loaded} =  useContext(ProductsContext)
   const [ items, setItems ] = useState<ItemData[]>([])
 
@@ -56,23 +60,19 @@ function SelectItems() {
   }, [loaded])
 
   const addItem = (productId: number, quantity: number) => {
-    setItems([ {productId, quantity }, ...items ])
+    const newItems = [ {productId, quantity }, ...items ]
+    setItems(newItems)
+    onChange(newItems)
   }
 
   const handleItemUpdate = (item: ItemData) => {
-    if (item.quantity <= 0) {
-      setItems(
-        items.filter(stateItem => stateItem.productId !== item.productId)
-      )
-    } else {
-      setItems(
-        items.map(stateItem => stateItem.productId === item.productId ? item : stateItem)
-      )
-    }
+    const newItems = item.quantity <= 0 ?
+      items.filter(stateItem => stateItem.productId !== item.productId) : 
+      items.map(stateItem => stateItem.productId === item.productId ? item : stateItem)
+    setItems(newItems)
+    onChange(newItems)
   }
     
-  useEffect(() => {console.log(items)}, [items])
-
   return (
     <div>
       <SelectProducts
