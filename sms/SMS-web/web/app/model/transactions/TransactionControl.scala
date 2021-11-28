@@ -26,7 +26,6 @@ class TransactionControl @Inject()(repo: TransactionRepositoryRDB, productsRepo:
       hasSufficientStock <- DBIO.successful(
         (products zip saleData.items).foldLeft(true)((acc, pair) => {
           val (product, item) = pair
-          println(product.stock - item.quantity)
           acc && (product.stock >= item.quantity)
         })
       )

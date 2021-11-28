@@ -22,21 +22,20 @@ class ProductRepositoryRDB @Inject()(dbConfigProvider: DatabaseConfigProvider, i
   val products = TableQuery[Products]
 
   override def decrementStock(items: Seq[ItemData]): DBIO[Unit] = {
-    println("DECREMENTING", items)
-    val idsAndStocks = for {
+    for {
       ps <- getById(items.map(_.productId))
       stocks <- DBIO.successful((ps zip items).map((pair) => {
         val (p, i) = pair
         p.stock - i.quantity
       }))
-    } yield ps map (_.id) zip stocks
-    idsAndStocks.map(result => DBIO.sequence(
-      result.map(pair => {
-        val (Some(id), newStock) = pair
-        println("Updating " + id + "  to " + newStock)
-        products.filter(_.id === id).map(_.stock).update(newStock)
-      })
-    ))
+      result <- DBIO.sequence(
+        (ps map (_.id) zip stocks).map(pair => {
+          val (Some(id), newStock) = pair
+          println("Updating " + id + "  to " + newStock)
+          products.filter(_.id === id).map(_.stock).update(newStock)
+        })
+      )
+    } yield result
   }
 
   override def getAll(): DBIO[Seq[Product]] = products.result
