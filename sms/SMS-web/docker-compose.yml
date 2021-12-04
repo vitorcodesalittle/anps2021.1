@@ -13,19 +13,51 @@ services:
       - ./volumes:/var/lib/postgresql/data
     networks:
       - brnet
-
-  pgadmin:
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: "user@domain.com"
-      PGADMIN_DEFAULT_PASSWORD: "12345"
-    ports:
-      - "16543:80"
-    depends_on:
-      - db
-    networks:
-      - brnet
-
+  
+  # accountservice:
+  #   build: ./web-account
+  # accountdb:
+  #   image: postgres:13
+  #   environment:
+  #     POSTGRES_PASSWORD: "senha"
+  #     POSTGRES_USER: "user"
+  #     POSTGRES_DB: "sms"
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - ./volumes:/var/lib/postgresql/data
+  #   networks:
+  #     - brnet
+  
+  # transactionservice:
+  #   build: ./web-transaction
+  # transactiondb:
+  #   image: postgres:13
+  #   environment:
+  #     POSTGRES_PASSWORD: "senha"
+  #     POSTGRES_USER: "user"
+  #     POSTGRES_DB: "sms"
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - ./volumes:/var/lib/postgresql/data
+  #   networks:
+  #     - brnet
+  
+  # productservice:
+  #   build: ./web-product
+  # productdb:
+  #   image: postgres:13
+  #   environment:
+  #     POSTGRES_PASSWORD: "senha"
+  #     POSTGRES_USER: "user"
+  #     POSTGRES_DB: "sms"
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - ./volumes:/var/lib/postgresql/data
+  #   networks:
+  #     - brnet
 networks:
   brnet:
     driver: bridge
