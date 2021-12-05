@@ -1,34 +1,35 @@
 version: '3.8'
 
 services:
-  db:
+  ui:
+    build: ./ui
+    ports:
+      - "80:80"
+    depends_on:
+      - accountservice
+    networks:
+      - brnet
+
+  accountservice:
+    build: ./web-account
+    ports:
+      - "9000:9000"
+    depends_on:
+      - accountdb
+    networks:
+      - brnet
+  accountdb:
     image: postgres:13
     environment:
       POSTGRES_PASSWORD: "senha"
       POSTGRES_USER: "user"
-      POSTGRES_DB: "sms"
+      POSTGRES_DB: "sms-accounts"
     ports:
-      - "5432:5432"
+      - "5432:54321"
     volumes:
       - ./volumes:/var/lib/postgresql/data
     networks:
       - brnet
-  
-  # accountservice:
-  #   build: ./web-account
-  # accountdb:
-  #   image: postgres:13
-  #   environment:
-  #     POSTGRES_PASSWORD: "senha"
-  #     POSTGRES_USER: "user"
-  #     POSTGRES_DB: "sms"
-  #   ports:
-  #     - "5432:5432"
-  #   volumes:
-  #     - ./volumes:/var/lib/postgresql/data
-  #   networks:
-  #     - brnet
-  
   # transactionservice:
   #   build: ./web-transaction
   # transactiondb:
