@@ -8,12 +8,11 @@ import play.api.mvc.{Action, BaseController, ControllerComponents}
 
 import javax.inject.Inject
 import scala.concurrent.duration.Duration
-import scala.concurrent.impl.Promise
-import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.concurrent.{Await, ExecutionContext}
 import scala.util.{Failure, Success}
 
 class TransactionController @Inject()(boundary: Facade, userAction: UserAction, val controllerComponents: ControllerComponents)(implicit ec: ExecutionContext)
-  extends BaseController with play.api.i18n.I18nSupport {
+  extends BaseController{
 
   def doSale: Action[JsValue] = userAction(parse.json) {
     implicit request ⇒ {
@@ -26,7 +25,7 @@ class TransactionController @Inject()(boundary: Facade, userAction: UserAction, 
           saleFuture match {
             case Failure(exception) => {
               println(exception)
-              InternalServerError("my bad bro")
+              InternalServerError(Json.obj("message" → "My bad bro"))
             }
             case Success(sale) => {
               Ok(Json.toJson(sale))

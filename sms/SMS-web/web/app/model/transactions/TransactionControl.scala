@@ -30,9 +30,8 @@ class TransactionControl @Inject()(repo: TransactionRepositoryRDB, productsRepo:
         })
       )
       if hasSufficientStock
-      prices <- DBIO.successful(products.map(_.suggestedPrice))
       sale <- repo.createSale(
-        Sale(None, userInfo.storeId, Instant.now(), Some((saleData.items zip prices).map(pair => {
+        Sale(None, userInfo.storeId, Instant.now(), Some((saleData.items zip products.map(_.suggestedPrice)).map(pair => {
           val (itemData, price) = pair
           Item(None, None, itemData.productId, itemData.quantity, price, None)
         })), None, DeliveryMethod(saleData.deliveryMethod), 3.3, saleData.deliveryAddress)

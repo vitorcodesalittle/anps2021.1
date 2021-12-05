@@ -1,17 +1,18 @@
 package model.transactions
 
 import model.products.{Product, Products}
-import model.users.DBRunner
+import util.DBRunner
+
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, ExecutionContext}
+import java.time.Instant
+
+import javax.inject.{Inject, Singleton}
 import play.api.db.slick.DatabaseConfigProvider
-import slick.dbio.{DBIO}
+import slick.dbio.DBIO
 import slick.jdbc.PostgresProfile
 import slick.jdbc.PostgresProfile.api._
 import slick.lifted.TableQuery
-
-import java.time.Instant
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, ExecutionContext, Future}
 
 @Singleton
 class TransactionRepositoryRDB @Inject()(dbConfigProvider: DatabaseConfigProvider, implicit val ec: ExecutionContext)
@@ -28,11 +29,12 @@ class TransactionRepositoryRDB @Inject()(dbConfigProvider: DatabaseConfigProvide
   private def mountSales(sales: Seq[(Sale, Item, Product)]): Seq[Sale] = {
     sales.foldLeft(Map[Int, Sale]())((acc, tuple) => {
       val (sale, item, product) = tuple
+      val itemWithProduct = item.copy(product = Some(product))
       if (acc contains sale.id.get) {
-        val updated = sale.copy(items = Some(sale.items.get :+ item.copy(product = Some(product))))
+        val updated = sale.copy(items = Some(sale.items.get :+ itemWithProduct))
         acc + (sale.id.get -> updated)
       } else {
-        acc + (sale.id.get -> sale.copy(items=Some(Seq())))
+        acc + (sale.id.get -> sale.copy(items=Some(Seq(itemWithProduct))))
       }
     }).values.toSeq
   }

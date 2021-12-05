@@ -2,17 +2,12 @@ package controllers
 
 import model.Facade
 import model.services.session.UserAction
-import model.store.forms.StoreData
-import model.users.User
 import model.users.forms.{LoginData, SignUpData}
-import play.api.data.Form
-import play.api.data.Forms.{mapping, of, text}
 import play.api.libs.json._
 import play.api.mvc._
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.{Failure, Success, Try}
 
 @Singleton
 class UserController @Inject()(val controllerComponents: ControllerComponents, boundary: Facade, userAction: UserAction)
@@ -31,7 +26,6 @@ class UserController @Inject()(val controllerComponents: ControllerComponents, b
           })
         }
       }
-
     }
   }
 

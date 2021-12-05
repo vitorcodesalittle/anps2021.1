@@ -1,13 +1,13 @@
 package model.products
 
 import model.transactions.forms.ItemData
-import model.users.DBRunner
 import play.api.db.slick.DatabaseConfigProvider
 import slick.basic.DatabaseConfig
 import slick.jdbc.PostgresProfile
 import slick.jdbc.PostgresProfile.api._
 import slick.jdbc.meta.MTable
 import slick.lifted.TableQuery
+import util.DBRunner
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.Duration
@@ -31,7 +31,6 @@ class ProductRepositoryRDB @Inject()(dbConfigProvider: DatabaseConfigProvider, i
       result <- DBIO.sequence(
         (ps map (_.id) zip stocks).map(pair => {
           val (Some(id), newStock) = pair
-          println("Updating " + id + "  to " + newStock)
           products.filter(_.id === id).map(_.stock).update(newStock)
         })
       )
@@ -80,5 +79,4 @@ class ProductRepositoryRDB @Inject()(dbConfigProvider: DatabaseConfigProvider, i
     _ ← db.run(DBIO.sequence(Seq(products.schema.create)))
   } yield true
   Await.ready(createSchemaFuture, Duration.Inf)
-
 }

@@ -6,19 +6,14 @@ import slick.jdbc.PostgresProfile
 import slick.jdbc.PostgresProfile.api._
 import slick.jdbc.meta.MTable
 import slick.lifted.TableQuery
+import util.DBRunner
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext, Future}
 
 
-abstract class DBRunner @Inject() (dbConfigProvider: DatabaseConfigProvider) {
-  val dbConfig = dbConfigProvider.get[PostgresProfile]
-  lazy val db = dbConfig.db
-  def run[R, S <: NoStream, T <: Effect](action: DBIOAction[R, S, T]) = {
-    db.run(action)
-  }
-}
+
 
 @Singleton
 class UserRepositoryBDR @Inject()(dbConfigProvider: DatabaseConfigProvider, implicit val ec: ExecutionContext) extends DBRunner(dbConfigProvider) with UserRepository {

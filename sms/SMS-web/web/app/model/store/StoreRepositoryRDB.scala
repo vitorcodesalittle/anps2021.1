@@ -1,12 +1,12 @@
 package model.store
 
-import model.users.DBRunner
 import play.api.db.slick.DatabaseConfigProvider
 import slick.basic.DatabaseConfig
 import slick.jdbc.PostgresProfile
 import slick.jdbc.PostgresProfile.api._
 import slick.jdbc.meta.MTable
 import slick.lifted.TableQuery
+import util.DBRunner
 
 import javax.inject.Inject
 import scala.concurrent.duration.Duration
