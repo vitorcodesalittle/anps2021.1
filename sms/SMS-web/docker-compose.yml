@@ -23,7 +23,7 @@ services:
     environment:
       POSTGRES_PASSWORD: "senha"
       POSTGRES_USER: "user"
-      POSTGRES_DB: "sms-accounts"
+      POSTGRES_DB: "smsaccounts"
     ports:
       - "5432:54321"
     volumes:
