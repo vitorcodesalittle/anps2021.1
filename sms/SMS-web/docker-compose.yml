@@ -10,12 +10,20 @@ services:
     networks:
       - brnet
 
+  transporterservice:
+    build: ./web-transporters
+    ports: 
+      - "9001:9001"
+    networks:
+      - brnet
+
   accountservice:
     build: ./web-account
     ports:
       - "9000:9000"
     depends_on:
       - accountdb
+      - transporterservice
     networks:
       - brnet
   accountdb:

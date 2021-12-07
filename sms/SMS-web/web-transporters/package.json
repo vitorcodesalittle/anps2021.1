@@ -15,11 +15,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.24.0",
     "fastify": "^3.0.0",
-    "fastify-plugin": "^3.0.0",
     "fastify-autoload": "^3.3.1",
+    "fastify-cli": "^2.14.0",
+    "fastify-plugin": "^3.0.0",
     "fastify-sensible": "^3.1.0",
-    "fastify-cli": "^2.14.0"
+    "frete": "^0.3.2",
+    "glob": "^7.2.0"
   },
   "devDependencies": {
     "tap": "^15.0.9"
