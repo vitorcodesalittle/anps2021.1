@@ -1,2 +1,3 @@
-1. Como lidar com um pacote de utilitários que é dependência de vários serviços?
-2. Que diagramas é preciso pra entrega 3?
+- O que seria exatamento o modelo de interação dos serviços?
+- O que seria exatamente o diagrama de componentes dos serviços (nível de análise)?
+
