@@ -1,4 +1,4 @@
-FROM node:fermium as build
+FROM node:fermium
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install
