@@ -10,9 +10,7 @@ class Purchases(tag: Tag) extends Table[Purchase](tag, "PURCHASES") {
 
   lazy val stores = TableQuery[Stores]
 
-  def id: Rep[Int] = column[Int]("ID", O.PrimaryKey, O.AutoInc)
-
-  def transactionId: Rep[TransactionId] = column[TransactionId]("TRANSACTION_ID", O.AutoInc)
+  def id: Rep[TransactionId] = column[Int]("ID", O.PrimaryKey, O.AutoInc)
 
   def createdAt: Rep[Instant] = column[Instant]("CREATED_AT")
 
@@ -20,11 +18,11 @@ class Purchases(tag: Tag) extends Table[Purchase](tag, "PURCHASES") {
 
   def store: ForeignKeyQuery[Stores, Store] = foreignKey("STORE", storeId, stores)(_.id)
 
-  def * : ProvenShape[Purchase] = (id.?, transactionId, storeId, createdAt) <> (row => {
-    val (id, transactionId, storeId, createdAt) = row
-    Purchase(Some(transactionId), storeId, createdAt, None, id)
+  def * : ProvenShape[Purchase] = (id.?, storeId, createdAt) <> (row => {
+    val (id, storeId, createdAt) = row
+    Purchase(id, storeId, createdAt, None)
   }, (purchase: Purchase) => {
-    Some((purchase.id, purchase.transactionId.get, purchase.storeId, purchase.createdAt))
+    Some((purchase.id, purchase.storeId, purchase.createdAt))
   })
 
 }

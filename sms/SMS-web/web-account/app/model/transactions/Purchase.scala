@@ -4,8 +4,7 @@ import java.time.Instant
 
 case class Purchase(
                      transactionId: Option[TransactionId],
-                     storeId: Int,
-                     createdAt: Instant,
-                     items: Option[Seq[Item]],
-                     id: Option[Int]
-) extends Transaction(transactionId, storeId, createdAt, items)
+                     transactionStoreId: Int,
+                     transactionCreatedAt: Instant,
+                     transactionItems: Option[Seq[Item]],
+) extends Transaction(transactionId, transactionStoreId, transactionCreatedAt, transactionItems)

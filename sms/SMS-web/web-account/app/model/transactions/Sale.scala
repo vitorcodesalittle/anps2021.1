@@ -16,14 +16,13 @@ object JadLog extends DeliveryMethod("JadLog")
 
 case class Sale(
                  transactionId: Option[TransactionId],
-                 storeId: Int,
-                 createdAt: Instant,
-                 items: Option[Seq[Item]],
-                 id: Option[Int],
+                 transactionStoreId: Int,
+                 transactionCreatedAt: Instant,
+                 transactionItems: Option[Seq[Item]],
                  deliveryMethod: DeliveryMethod,
                  deliveryPrice: Double,
                  deliveryAddress: Address)
-  extends Transaction(transactionId, storeId, createdAt, items)
+  extends Transaction(transactionId, transactionStoreId, transactionCreatedAt, transactionItems)
 
 object Sale {
   implicit val writes: OWrites[Sale] = Json.writes[Sale]

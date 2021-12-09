@@ -23,20 +23,21 @@ class TransactionRepositoryRDB @Inject()(dbConfigProvider: DatabaseConfigProvide
   val purchases = TableQuery[Purchases]
   val allItems = TableQuery[Items]
   val products = TableQuery[Products]
+  val transactions = TableQuery[Transactions]
 
-  println("Creating transactions")
-  Await.result(db.run(DBIO.sequence(Seq(purchases.schema.createIfNotExists,  sales.schema.createIfNotExists, allItems.schema.createIfNotExists))), Duration.Inf)
+  val createSchema = DBIO.sequence(Seq(transactions.schema.createIfNotExists, purchases.schema.createIfNotExists,  sales.schema.createIfNotExists, allItems.schema.createIfNotExists))
 
   private def mountSales(sales: Seq[(Sale, Item, Product)]): Seq[Sale] = {
     sales.foldLeft(Map[Int, Sale]())((acc, tuple) => {
       val (sale, item, product) = tuple
       val itemWithProduct = item.copy(product = Some(product))
-      if (acc contains sale.id.get) {
+      if (acc contains sale.id.get.value) {
         val updated = sale.copy(items = Some(sale.items.get :+ itemWithProduct))
         acc + (sale.id.get -> updated)
       } else {
         acc + (sale.id.get -> sale.copy(items=Some(Seq(itemWithProduct))))
       }
+      acc
     }).values.toSeq
   }
 
@@ -52,8 +53,12 @@ class TransactionRepositoryRDB @Inject()(dbConfigProvider: DatabaseConfigProvide
 
   override def createSale(sale: Sale): DBIO[Sale] = {
     for {
-      sale <- sales returning sales.map(sale => (sale.id, sale.transactionId)) into ((sale, pair) => sale.copy(id = Some(pair._1), transactionId = Some(pair._2))) += sale
-      items <- allItems returning allItems.map(_.id) into ((item, itemId) => item.copy(id = Some(itemId))) ++= (sale.items.get.map(item => item.copy(transactionId = sale.transactionId)))
+      sale <- (sales returning sales.map(_.transactionId) into ((sale, pair) => sale.copy(transactionId = Some(pair))) += sale)
+      items <- allItems returning allItems.map(_.id) into
+        ((item, itemId) => item.copy(id = Some(itemId))) ++=
+          sale.items.get.map(
+            item => item.copy(transactionId = sale.transactionId)
+          )
     } yield sale.copy(items = Some(items))
   }
 
