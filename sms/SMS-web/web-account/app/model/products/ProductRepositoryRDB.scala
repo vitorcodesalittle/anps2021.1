@@ -71,12 +71,7 @@ class ProductRepositoryRDB @Inject()(dbConfigProvider: DatabaseConfigProvider, i
 
   override def remove(id: Int): DBIO[Int] = ???
 
-  val createSchemaFuture = for {
-    tables ← db.run {
-      MTable.getTables
-    }
-    if !tables.map(_.name.name).contains(products.baseTableRow.tableName)
-    _ ← db.run(DBIO.sequence(Seq(products.schema.create)))
-  } yield true
-  Await.ready(createSchemaFuture, Duration.Inf)
+  val createSchemaFuture: Future[Seq[Unit]] = db.run(DBIO.sequence(Seq(products.schema.createIfNotExists)))
+  println("Creating Products table")
+  Await.result(createSchemaFuture, Duration.Inf)
 }

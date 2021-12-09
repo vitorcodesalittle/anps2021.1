@@ -2,7 +2,9 @@ package model.transactions
 
 import model.products.ProductRepositoryRDB
 import model.services.session.UserInfo
+import model.services.transporter.{Transporter, TransporterApi}
 import model.transactions.forms.{CacheFlowRequestData, SaleData}
+import play.api.libs.ws.WSClient
 import slick.dbio.DBIO
 
 import java.time.Instant
@@ -10,7 +12,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class TransactionControl @Inject()(repo: TransactionRepositoryRDB, productsRepo: ProductRepositoryRDB, implicit val ec: ExecutionContext) {
+class TransactionControl @Inject()(repo: TransactionRepositoryRDB, productsRepo: ProductRepositoryRDB)(implicit val ec: ExecutionContext, ws: WSClient) extends TransporterApi {
   def getSales(userInfo: UserInfo): Future[Seq[Sale]] = {
     repo.run(repo.getAllSales(userInfo.storeId))
   }
@@ -30,11 +32,12 @@ class TransactionControl @Inject()(repo: TransactionRepositoryRDB, productsRepo:
         })
       )
       if hasSufficientStock
+      deliveryPrice ← DBIO.from(getDeliveryCost(saleData.deliveryAddress, Transporter(saleData.deliveryMethod)) map (_.price) )
       sale <- repo.createSale(
         Sale(None, userInfo.storeId, Instant.now(), Some((saleData.items zip products.map(_.suggestedPrice)).map(pair => {
           val (itemData, price) = pair
           Item(None, None, itemData.productId, itemData.quantity, price, None)
-        })), None, DeliveryMethod(saleData.deliveryMethod), 3.3, saleData.deliveryAddress)
+        })), None, DeliveryMethod(saleData.deliveryMethod), deliveryPrice, saleData.deliveryAddress)
       )
       _ <- productsRepo.decrementStock(saleData.items)
     } yield sale)

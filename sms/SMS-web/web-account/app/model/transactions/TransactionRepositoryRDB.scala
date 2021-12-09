@@ -24,7 +24,8 @@ class TransactionRepositoryRDB @Inject()(dbConfigProvider: DatabaseConfigProvide
   val allItems = TableQuery[Items]
   val products = TableQuery[Products]
 
-  Await.ready(db.run(DBIO.sequence(Seq(purchases.schema.create, allItems.schema.create, sales.schema.create))), Duration.Inf)
+  println("Creating transactions")
+  Await.result(db.run(DBIO.sequence(Seq(purchases.schema.createIfNotExists,  sales.schema.createIfNotExists, allItems.schema.createIfNotExists))), Duration.Inf)
 
   private def mountSales(sales: Seq[(Sale, Item, Product)]): Seq[Sale] = {
     sales.foldLeft(Map[Int, Sale]())((acc, tuple) => {

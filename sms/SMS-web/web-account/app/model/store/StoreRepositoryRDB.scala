@@ -27,10 +27,7 @@ class StoreRepositoryRDB @Inject()(dbConfigProvider: DatabaseConfigProvider, imp
     stores.filter(_.ownerId === ownerId).result
   }
 
-  val createSchemaFuture = for {
-    tables ← db.run(MTable.getTables)
-    if !tables.map(_.name.name).contains(stores.baseTableRow.tableName)
-    _ ← db.run(DBIO.sequence(Seq(stores.schema.create)))
-  } yield true
-  Await.ready(createSchemaFuture, Duration.Inf)
+  val createSchemaFuture = db.run(DBIO.sequence(Seq(stores.schema.createIfNotExists)))
+  println("Creating Stores table")
+  Await.result(createSchemaFuture, Duration.Inf)
 }

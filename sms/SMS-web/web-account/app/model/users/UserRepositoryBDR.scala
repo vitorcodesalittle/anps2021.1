@@ -31,12 +31,7 @@ class UserRepositoryBDR @Inject()(dbConfigProvider: DatabaseConfigProvider, impl
     users.filter(user => user.email === email).result.head
   }
 
-  val createSchemaFuture: Future[Boolean] = for {
-    tables ← db.run {
-      MTable.getTables
-    }
-    if !tables.map(_.name.name).contains(users.baseTableRow.tableName)
-    _ ← db.run(DBIO.sequence(Seq(users.schema.create)))
-  } yield true
-  Await.ready(createSchemaFuture, Duration.Inf)
+  val createSchemaFuture =  db.run(DBIO.sequence(Seq(users.schema.createIfNotExists)))
+  println("Creating users table")
+  Await.result(createSchemaFuture, Duration.Inf)
 }
