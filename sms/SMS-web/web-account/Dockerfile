@@ -3,7 +3,7 @@ MAINTAINER vlma@cin.ufpe.br
 
 WORKDIR /app
 COPY . .
-RUN ls -al
+RUN sbt update
 RUN sbt dist
 WORKDIR /app/target/universal/
 

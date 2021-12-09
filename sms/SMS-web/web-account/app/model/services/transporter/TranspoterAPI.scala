@@ -2,7 +2,6 @@ package model.services.transporter
 
 import model.transactions.Address
 import play.api.libs.json.{JsError, JsSuccess, Json}
-import play.api.libs.ws
 import play.api.libs.ws.WSClient
 
 import java.time.Instant
