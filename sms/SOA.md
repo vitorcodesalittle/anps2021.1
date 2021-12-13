@@ -3,10 +3,6 @@ marp: true
 author: vitor maia
 ---
 
-# Projeto com SOA
-
----
-
 # Consertos RUP
 
 ---
@@ -27,7 +23,9 @@ author: vitor maia
 
 ---
 
-# Especificação do Modelo de Negócio
+# Projeto em SOA
+
+## Especificação do Modelo de Negócio
 
 ---
 
@@ -66,15 +64,15 @@ author: vitor maia
 ### Serviços stateful:
 - Serviço de autenticação
 - Serviço de transações
-- Serviço de transporte/entrega
 - Serviço de produtos
 ### Serviços stateless
 - Serviço do webclient, com interfaces para gerenciamento de produtos e gerenciamento de transações
+- Serviço de transporte/entrega
 
 ---
 
 ## Modelo de Interação dos Serviços
-![w:1000](./docs/use-cases2.png)
+![w:1000](./docs/services-by-use-cases.png)
 
 
 ---
