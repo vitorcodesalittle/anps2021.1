@@ -73,13 +73,14 @@ author: vitor maia
 
 ---
 
-## Arquitetura de Serviços
-![w:1000](./docs/arq-servicos.png)
+## Modelo de Interação dos Serviços
+![w:1000](./docs/use-cases2.png)
+
 
 ---
 
-## Modelo de Interação dos Serviços
-![w:1000](./docs/use-cases2.png)
+## Arquitetura de Serviços
+![w:1000](./docs/arq-servicos.png)
 
 ---
 
