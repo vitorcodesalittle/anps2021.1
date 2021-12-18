@@ -8,6 +8,7 @@ import slick.jdbc.PostgresProfile.api._
 import java.sql.Timestamp
 import java.time.Instant
 import javax.inject.Inject
+import scala.collection.mutable.Map
 import scala.concurrent.{Await, ExecutionContext, Future}
 
 class TransactionRepositoryRDB @Inject()(dbConfigProvide: DatabaseConfigProvider)
@@ -41,11 +42,40 @@ class TransactionRepositoryRDB @Inject()(dbConfigProvide: DatabaseConfigProvider
   override def createPurchase(purchaseData: PurchaseData): Future[Purchase] = ???
 
   override def getTransactions(from: Instant, to: Instant): Future[Seq[Transaction]] = {
-//    Transactions.join(Sales).on(_.id === _.transactionId)
-//      .join(Purchases).on(_._1.id === _.transactionId)
-//      .join(Items).on(_._1._2.id === _.saleId)
-//    val result = db.run(Transactions.result) map(r ⇒ r)
-    ???
+   db.run((for {
+      transactions <- Transactions
+      sales <- Sales.filter(_.transactionId === transactions.id)
+      items <- Items.filter(_.saleId === sales.id)
+    } yield ((transactions, sales, items))).result)
+     .map(mountTransactions)
+  }
+  def mountTransactions(data: Seq[(TransactionsRow, SalesRow, ItemsRow)]): Seq[Transaction] = {
+    data.foldLeft(Map[Int, Transaction]())((acc, tuple) => {
+      val (transaction, sale, item) = tuple
+      val parsedItem = Item(item.productId, item.quantity, item.description, item.saleId, item.price)
+      if (acc.contains(transaction.id.get)) {
+        val t = acc(sale.transactionId)
+        val tt = t match {
+          case Purchase(transactionId, storeId, createdAt, description) => Purchase(transactionId, storeId, createdAt, description)
+          case Sale(transactionId, storeId, createdAt, id, items, deliveryMethod, deliveryPrice, address) =>
+            Sale(transactionId, storeId, createdAt, id, Some(items.get :+ parsedItem), deliveryMethod, deliveryPrice, address)
+        }
+        acc.addOne((transaction.id.get, tt))
+        acc
+      } else {
+        acc.addOne((transaction.id.get, Sale(
+          transactionId = sale.transactionId,
+          storeId = transaction.storeId,
+          createdAt = transaction.createdAt.toInstant,
+          id = sale.id.get,
+          items = Some(Seq(Item(productId = item.productId, quantity = item.quantity, price = item.price, description = item.description, saleId = item.saleId))),
+          deliveryMethod = sale.deliveryMethod,
+          deliveryPrice = sale.deliveryPrice,
+          address = Address(country = sale.addressCountry, state = sale.addressState, city = sale.addressCity, street = sale.addressStreet, extra = sale.addressExtra, zip = sale.addressZip)
+        )))
+        acc
+      }
+    }).values.toSeq
   }
 
   override val profile = PostgresProfile

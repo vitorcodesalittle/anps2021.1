@@ -32,14 +32,15 @@ class AppController @Inject()(val controllerComponents: ControllerComponents, va
   }}
 
   def createSale: Action[AnyContent] = Action.async { implicit request => {
-    println("HIII")
-    println(request.body.asJson.toString)
     request.body.asJson match {
       case Some(data) => data.validate[SaleData] match {
-        case JsSuccess(value, _) => transactionControl.createSale(value).map( sale => Json.toJson(sale)).map(result => Ok(result)).recover(error => {
-          println(error)
-          InternalServerError("Internal Error")
-        })
+        case JsSuccess(value, _) => transactionControl.createSale(value)
+          .map(sale => Json.toJson(sale))
+          .map(result => Ok(result))
+          .recover(error => {
+            println(error)
+            InternalServerError("Internal Error")
+          })
         case JsError(errors) => Future {
           println(errors) // TODO: proper validation
           Ok(Json.obj("message" -> "Bad sale data"))
