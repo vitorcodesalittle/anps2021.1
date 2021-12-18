@@ -6,7 +6,7 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - accountservice
+      - transactionservice
     networks:
       - brnet
 
@@ -17,56 +17,23 @@ services:
     networks:
       - brnet
 
-  accountservice:
-    build: ./web-account
-    ports:
-      - "9000:9000"
+  transactionservice:
+    build: ./web-transactions
     depends_on:
-      - accountdb
+      - transactiondb
       - transporterservice
-    networks:
-      - brnet
-  accountdb:
+  transactiondb:
     image: postgres:13
     environment:
       POSTGRES_PASSWORD: "senha"
       POSTGRES_USER: "user"
-      POSTGRES_DB: "smsaccounts"
+      POSTGRES_DB: "sms"
     ports:
-      - "5432:54321"
+      - "5432:5432"
     volumes:
-      - ./volumes:/var/lib/postgresql/data
+      - ./.volumes:/var/lib/postgresql/data
     networks:
       - brnet
-  # transactionservice:
-  #   build: ./web-transaction
-  # transactiondb:
-  #   image: postgres:13
-  #   environment:
-  #     POSTGRES_PASSWORD: "senha"
-  #     POSTGRES_USER: "user"
-  #     POSTGRES_DB: "sms"
-  #   ports:
-  #     - "5432:5432"
-  #   volumes:
-  #     - ./volumes:/var/lib/postgresql/data
-  #   networks:
-  #     - brnet
-  
-  # productservice:
-  #   build: ./web-product
-  # productdb:
-  #   image: postgres:13
-  #   environment:
-  #     POSTGRES_PASSWORD: "senha"
-  #     POSTGRES_USER: "user"
-  #     POSTGRES_DB: "sms"
-  #   ports:
-  #     - "5432:5432"
-  #   volumes:
-  #     - ./volumes:/var/lib/postgresql/data
-  #   networks:
-  #     - brnet
 networks:
   brnet:
     driver: bridge

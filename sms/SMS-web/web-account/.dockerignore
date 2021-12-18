@@ -1,7 +1,0 @@
-.idea/
-.bsp/
-logs/
-target/
-.git/
-.gitignore
-Dockerfile

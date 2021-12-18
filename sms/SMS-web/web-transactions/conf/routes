@@ -1,0 +1,12 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# https://www.playframework.com/documentation/latest/ScalaRouting
+# ~~~~
+
+# An example controller showing a sample home page
+GET     /transactions                           controllers.AppController.getTransactions()
+POST    /sales                                  controllers.AppController.createSale()
+POST    /purchases                              controllers.AppController.createPurchase()
+#DELETE  /transaction                            controllers.AppController.deleteTransaction()
+#PUT     /sales                                  controllers.AppController.updateSale()
+#PUT     /purchases                              controllers.AppController.updatePurchase()
