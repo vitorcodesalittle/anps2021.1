@@ -2,7 +2,7 @@ import slick.codegen.SourceCodeGenerator
 import slick.jdbc.PostgresProfile
 
 import scala.concurrent.{Await, ExecutionContext}
-import scala.concurrent.duration.DurationInt
+import scala.concurrent.duration.{Duration, DurationInt}
 
 val dir = "/home/vilma/github.com/vlma/anps2021.1/sms/SMS-web/web-transactions/app/model/"
 val outputDir = dir
@@ -26,7 +26,7 @@ object CustomizedCodeGenerator{
         outputDir,
         pkg
       )),
-      20.seconds
+      Duration.Inf
     )
   }
 

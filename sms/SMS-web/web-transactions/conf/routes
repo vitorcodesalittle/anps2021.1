@@ -4,9 +4,18 @@
 # ~~~~
 
 # An example controller showing a sample home page
++nocsrf
 GET     /transactions                           controllers.AppController.getTransactions()
++nocsrf
 POST    /sales                                  controllers.AppController.createSale()
++nocsrf
 POST    /purchases                              controllers.AppController.createPurchase()
+
+#+nocsrf
 #DELETE  /transaction                            controllers.AppController.deleteTransaction()
+
+#+nocsrf
 #PUT     /sales                                  controllers.AppController.updateSale()
+
+#+nocsrf
 #PUT     /purchases                              controllers.AppController.updatePurchase()

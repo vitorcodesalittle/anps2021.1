@@ -9,7 +9,7 @@ import java.sql.Timestamp
 import java.time.Instant
 import javax.inject.Inject
 import scala.collection.mutable.Map
-import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.concurrent.{ExecutionContext, Future}
 
 class TransactionRepositoryRDB @Inject()(dbConfigProvide: DatabaseConfigProvider)
                                         (implicit val ec: ExecutionContext)
