@@ -1,4 +1,5 @@
 import React from 'react'
+import 'antd/dist/antd.css'
 import { BrowserRouter as Router, Route, Routes} from 'react-router-dom'
 import Auth from '../auth'
 import Products from '../products'

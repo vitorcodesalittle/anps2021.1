@@ -27,47 +27,45 @@ type ProductData = {
   barcode: string;
 }
 
-
-type Item = {
-  productId: number;
-  quantity: number;
-  price: number;
-  product: Product;
-}
-
 type Transaction = {
   transactionId: number;
   createdAt: Date;
-  items: Item[];
 }
 
 type DeliveryMethod = 'correios' | 'jadlog' | 'motoboy' | 'sedex'
 
 type ItemData = {
+  price: number;
+  description: string;
   productId: number;
   quantity: number;
+}
+type Item = ItemData & {
+  saleId: number;
 }
 
 type Address = {
   country?: string;
   state?: string;
   city?: string;
-  province?: string;
-  cep?: string;
-  extra?: string;
   street?: string;
+  extra?: string;
+  zip?: string;
 }
-
+type TransactionData = {
+  storeId: number
+}
 type SaleData = {
   deliveryAddress: Address;
   deliveryMethod: DeliveryMethod;
   items: ItemData[];
-}
+} & TransactionData
 
 type Sale = {
-  transaction: Transaction;
   deliveryMethod: DeliveryMethod;
   deliveryPrice: number;
+  items: Item[];
+  address: Address
 } & Transaction
 
 type MountCashFlowRequest = {

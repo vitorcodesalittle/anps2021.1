@@ -1,7 +1,8 @@
-import React, { useState }from 'react'
+import React, { useEffect, useState }from 'react'
+import {Modal, Button, message} from 'antd'
 import {getTransactions as apiGetTransactions, createSale} from '../../pkg/smsApi'
 import Content from '../../components/content'
-import TransactionCard from '../../components/transaction-card'
+import TransactionsTable from '../../components/transactions-table'
 import Form from '../../components/form'
 import SelectItems from '../../components/select-products'
 import { Schema } from '../../pkg/form'
@@ -18,6 +19,7 @@ const defaultFlowRequest = (): MountCashFlowRequest => {
 const defaultSaleData = (): SaleData => ({
   deliveryMethod: 'correios',
   deliveryAddress: defaultAddress(),
+  storeId: 1,
   items: []
 })
 
@@ -58,29 +60,49 @@ const SaleDataSchema: Schema<SaleData> = {
   }
 }
 function Transactions() {
-  const [ transactions,  ] = useState<(Sale | Purchase)[]>([])
+  const [creatingSale, setCreatingSale] = useState(false)
+  const [ transactions, setTransactions ] = useState<(Sale | Purchase)[]>([])
   const [ flowRequest,  ] = useState<MountCashFlowRequest>(defaultFlowRequest())
   const postSale = (saleData: SaleData) => {
-    console.log('CREATINGG SALe NOW - AKA SUBMITING FORM')
-    console.log(saleData)
-    console.log('ppostsales fn: ',createSale)
-    return createSale(saleData).then(console.log).catch(console.error)
+    return createSale(saleData).then(() => {
+      message.success({
+        message: "Sale created"
+      })
+      setCreatingSale(false)
+    }).catch((err) => {
+      console.error(err)
+      message.error({
+        message: "Failed to create sale." + (process.env.NODE_ENV !== "production") ? " CHECK CONSOLE" : ""
+      })
+    })
   } 
 
   const getTransactions = (flowRequest: MountCashFlowRequest) => apiGetTransactions()
 
+  useEffect(() => {
+    getTransactions(flowRequest).then(transactions => {
+      console.log(transactions)
+      setTransactions(transactions.data)
+    })
+  }, [])
+
   return <Content>
+    <Button onClick={() => setCreatingSale(true)}>Register Sale</Button>
     <h2>Get report</h2>
     <Form<MountCashFlowRequest> schema={FlowRequestSchema}
       onSubmit={getTransactions}
       initialState={flowRequest}
       submitLabel="Pegar Transações"/>
     <h2>Create sale</h2>
-    <Form<SaleData> schema={SaleDataSchema}
-      onSubmit={postSale}
-      initialState={defaultSaleData()}
-      submitLabel="Criar venda"/>
-    {transactions.map(transaction => <TransactionCard key={transaction.transactionId} transaction={transaction}/>)}
+    <Modal title="Register a sale" onCancel={() => setCreatingSale(false)} footer={null} visible={creatingSale}>
+      <Form<SaleData> schema={SaleDataSchema}
+        onSubmit={postSale}
+        initialState={defaultSaleData()}
+        submitLabel="Criar venda"/>
+    </Modal>
+    <div>
+      <TransactionsTable transactions={transactions}/>
+    </div>
   </Content>
 }
 export default Transactions

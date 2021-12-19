@@ -8,9 +8,11 @@ interface FormProps<T extends Record<string, unknown>> {
   onSubmit: (value: T) => any;
   initialState: T;
   children?: React.ReactElement;
+  onCancel?: () => void;
+  cancelLabel?: string
 }
 const Form = <T extends Record<string, unknown>> (props: FormProps<T>) => {
-  const { schema, initialState, submitLabel, onSubmit} = props
+  const { schema, initialState, submitLabel, onSubmit, onCancel, cancelLabel} = props
   const [data, setData] = useState<T>(initialState)
 
   const nodes = Object.entries(schema).map(([key, value]) => {
@@ -30,6 +32,7 @@ const Form = <T extends Record<string, unknown>> (props: FormProps<T>) => {
     <form onSubmit={event => event.preventDefault()}>
       {nodes}
       <button onClick={() => handleSubmit()}>{submitLabel}</button>
+      <button onClick={onCancel}>{cancelLabel || "Cancel"}</button>
     </form>
   )
 
