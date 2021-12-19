@@ -1,6 +1,9 @@
 import React, { useEffect, useState, useContext } from 'react'
+import { Input, message, Typography, Button } from 'antd'
 import ProductsContext from '../../contexts/products'
 import ProductCard from '../../components/product-card'
+
+const {Text} = Typography
 
 interface SelectProps<T> {
     data: T[];
@@ -23,25 +26,33 @@ function SelectProducts(props: SelectProductsProps) {
 
 interface ItemEditProps {
     item: ItemData;
-    products: Product[];
+    productDescription: string;
     onUpdate: (item: ItemData) => any;
 }
 
 const ItemEdit: React.FC<ItemEditProps> = function (props) {
-  const {products, item, onUpdate} = props
-  const product = products.find(p => p.id === item.productId)
-  const total = (product?.suggestedPrice || 0) * item.quantity
+  const {item, onUpdate, productDescription} = props
+  const total = (item.price || 0) * item.quantity
   return (
-    <tr>
-      <td>{product?.name}</td>
-      <td>{item.quantity}</td>
-      <td>{product?.suggestedPrice}</td>
-      <td>{total}</td>
-      <td>
-        <button onClick={() => onUpdate({...item, quantity: item.quantity + 1})}>+</button>
-        <button onClick={() => onUpdate({ ...item, quantity: item.quantity - 1})}>-</button>
-      </td>
-    </tr>
+    <div>
+      <div>
+        <Text>Product: </Text>
+        <Text>{productDescription}</Text>
+      </div>
+      <div>
+        <Text>Quantity: </Text><Input type="number" value={item.quantity} onChange={event => onUpdate({...item, quantity: parseInt(event.target.value)})} step="1"></Input>
+      </div>
+      <div>
+        <Text>Price: </Text><Input type="number" value={item.price} onChange={event => onUpdate({...item, price: parseFloat(event.target.value)})} step="0.1"></Input>
+      </div>
+      <div>
+        <Text>Total: </Text><Text>{total.toFixed(2)}</Text>
+      </div>
+      <div>
+        <Button onClick={() => onUpdate({...item, quantity: item.quantity + 1})}>+</Button>
+        <Button onClick={() => onUpdate({ ...item, quantity: item.quantity - 1})}>-</Button>
+      </div>
+    </div>
   )
 }
 
@@ -49,50 +60,39 @@ interface SelectItemsProps {
   onChange: (items: ItemData[]) => void;
 }
 function SelectItems(props: SelectItemsProps) {
-  const {onChange} = props
-  const {getProducts, products, loading, loaded} =  useContext(ProductsContext)
-  const [ items, setItems ] = useState<ItemData[]>([])
+  const [products, setProducts] = useState<string[]>([])
+  const [items, setItems] = useState<ItemData[]>([])
+  const [productDescription, setProductDescription] = useState('')
+  const handleAddProduct = (productDescription: string) => {
+    if (!productDescription) {
+      return
+    }
+    if (products?.includes(productDescription)) {
+      message.info("this product was already added")
+      return
+    }
+    setProducts([productDescription, ...products])
+    setItems([{description: productDescription, price: 1.00, productId: Math.floor(Math.random() * 99999), quantity: 1}, ...items])
+    setProductDescription('')
+  }
+
+  const handleUpdate = (updated: ItemData) => {
+    setItems(items.map(item => item.productId === updated.productId ? updated : item))
+  }
 
   useEffect(() => {
-    if (!loaded && !loading) {
-      getProducts(true).then(console.log).catch(err => console.error(err))
-    }
-  }, [loaded])
-
-  const addItem = (productId: number, quantity: number) => {
-    const newItems = [ {productId, quantity }, ...items ]
-    setItems(newItems)
-    onChange(newItems)
-  }
-
-  const handleItemUpdate = (item: ItemData) => {
-    const newItems = item.quantity <= 0 ?
-      items.filter(stateItem => stateItem.productId !== item.productId) : 
-      items.map(stateItem => stateItem.productId === item.productId ? item : stateItem)
-    setItems(newItems)
-    onChange(newItems)
-  }
-    
+    props.onChange(items)
+  }, [items])
   return (
     <div>
-      <SelectProducts
-        data={products.filter(p => !items.find(item => item.productId === p.id ))}
-        onSelect={product => addItem(product.id, 1)}/>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          {items.map(item => (
-            <ItemEdit item={item} products={products} key={item.productId} onUpdate={handleItemUpdate}/>
-          ))}
-        </tbody>
-      </table>
+      {
+        items.map(item => <ItemEdit item={item} productDescription={item.description} onUpdate={handleUpdate}/>)
+      }
+      <Text>Product</Text>
+      <Input value={productDescription} onPressEnter={event => {
+        event.preventDefault();
+        handleAddProduct(productDescription)
+      }} onChange={event => setProductDescription(event.target.value)}></Input>
     </div>
   )
 }

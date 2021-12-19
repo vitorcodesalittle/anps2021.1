@@ -56,9 +56,9 @@ type TransactionData = {
   storeId: number
 }
 type SaleData = {
-  deliveryAddress: Address;
-  deliveryMethod: DeliveryMethod;
-  items: ItemData[];
+  address: Address;
+  deliveryMethod: string;
+  itemsData: ItemData[];
 } & TransactionData
 
 type Sale = {

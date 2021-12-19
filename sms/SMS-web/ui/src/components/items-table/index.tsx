@@ -25,7 +25,7 @@ const ItemsTable = (props: ItemsTableProps) => {
             render: (item: Item) => item.price * item.quantity
         }
     ]
-    return <Table dataSource={items} columns={columns} pagination={false}/>
+    return <Table dataSource={items} columns={columns} pagination={false} rowKey={item => `${item.productId}${item.saleId}`}/>
 }
 
 export default ItemsTable

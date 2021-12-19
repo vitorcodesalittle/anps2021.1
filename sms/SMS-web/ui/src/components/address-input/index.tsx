@@ -8,9 +8,8 @@ interface AddressInputProps {
 export const defaultAddress = (): Address => ({
   country: '',
   city: '',
-  cep: '',
+  zip: '',
   extra: '',
-  province: '',
   state: '',
   street: ''
 })
@@ -26,9 +25,8 @@ function AddressInput(props: AddressInputProps) {
     <>
       <Input label={'País'} type="text" onChange={changeHandler('country')}/>
       <Input label={'Cidade'} type="text" onChange={changeHandler('city')}/>
-      <Input label={'CEP'} type="text" onChange={changeHandler('cep')}/>
+      <Input label={'CEP'} type="text" onChange={changeHandler('zip')}/>
       <Input label={'Estado'} type="text" onChange={changeHandler('state')}/>
-      <Input label={'Province'} type="text" onChange={changeHandler('province')}/>
       <Input label={'Rua'} type="text" onChange={changeHandler('street')}/>
       <Input label={'Extra'} type="text" onChange={changeHandler('extra')}/>
 

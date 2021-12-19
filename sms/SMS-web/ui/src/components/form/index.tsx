@@ -21,7 +21,7 @@ const Form = <T extends Record<string, unknown>> (props: FormProps<T>) => {
   })
     .sort(([_, value]) => value.order)
     .map(([key, value]) => {
-      if (value.render) return <value.render onChange={event => setData(value.onChange(data, event))}/>
+      if (value.render) return <value.render onChange={event => setData(value.onChange(data, event))} key={key}/>
       return <Input key={key} type={value.htmlType} label={value.label} onChange={event => setData(value.onChange(data, event.target.value))}/>
     })
   const handleSubmit = () => {

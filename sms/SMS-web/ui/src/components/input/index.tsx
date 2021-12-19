@@ -1,4 +1,7 @@
 import React from 'react'
+import { Typography, Input } from 'antd'
+
+const { Text } = Typography
 
 interface InputProps {
   key?:string;
@@ -8,13 +11,13 @@ interface InputProps {
   onChange: React.ChangeEventHandler<HTMLInputElement>;
 }
 
-const Input = ({key, label, type, onChange, step}: InputProps) => {
+const MyInput = ({key, label, type, onChange, step}: InputProps) => {
   return (
     <div key={key}>
-      <label>{label}</label>
-      <input type={type} step={type === 'number' ? step || '1' : undefined} name={key} onChange={(event) => onChange(event)}></input>
+      <Text>{label}: </Text>
+      <Input type={type} step={type === 'number' ? step || '1' : undefined} name={key} onChange={(event) => onChange(event)}></Input>
     </div>
   )
 }
 
-export default Input
+export default MyInput
