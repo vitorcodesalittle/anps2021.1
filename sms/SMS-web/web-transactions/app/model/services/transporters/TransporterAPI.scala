@@ -11,7 +11,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class TransporterAPI {
   def getDeliveryCost(address: Address, method: String)
                      (implicit ec: ExecutionContext, ws: WSClient): Future[TransporterResponse] = {
-    val baseURL = "http://localhost:3000"
+    val baseURL = "http://transporterservice:3000"
     ws.url(s"${baseURL}/transporters/${method}")
       .addQueryStringParameters("cep" -> address.zip)
       .execute()

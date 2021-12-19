@@ -4,7 +4,7 @@ services:
   ui:
     build: ./ui
     ports:
-      - "80:80"
+      - "80:1234"
     depends_on:
       - transactionservice
     networks:
@@ -22,6 +22,8 @@ services:
     depends_on:
       - transactiondb
       - transporterservice
+    ports:
+      - "9000:9000"
   transactiondb:
     image: postgres:13
     environment:
