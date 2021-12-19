@@ -1,4 +1,5 @@
-import 'antd/dist/antd.css';
+import '~antd/dist/antd.css';
+
 h1 {
   color: hotpink;
   font-family: cursive;
