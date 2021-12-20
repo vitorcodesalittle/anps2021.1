@@ -45,11 +45,7 @@ author: vitor maia
 
 <div style="display: flex; flex-direction: row; justify-content: space-between;">
 
-![h:500](./docs/wireframes/1.jpg)
-
-![h:500](./docs/wireframes/3.jpg)
-
-![h:500](./docs/wireframes/2.jpg)
+![h:500](./docs/wireframes/1.jpg) ![h:500](./docs/wireframes/3.jpg) ![h:500](./docs/wireframes/2.jpg)
 
 </div>
 
