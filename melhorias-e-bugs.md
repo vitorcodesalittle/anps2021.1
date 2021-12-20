@@ -1,4 +1,0 @@
-- [ ] Bug em criar venda: Não checa estoque
-- [ ] com. c/ serviço externo ainda não implementado
-- [ ] Bug na tela de transações: Puxa todas as transações, devia ser apenas a da loja do usuário
-- [ ] Remover collections dos diagramas, já que não foi implementado msm (???)
