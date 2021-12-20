@@ -1,5 +1,6 @@
 ---
 marp: true
+class: invert
 author: vitor maia
 ---
 
@@ -68,13 +69,21 @@ author: vitor maia
 ---
 
 ## Modelo de Interação dos Serviços
-![w:1000](./docs/services-by-use-cases.png)
+(AJUSTADO -- removidos os casos de uso relacionados a transporte)
+![w:800](./docs/services-by-use-cases.png)
 
 
 ---
 
 ## Arquitetura de Serviços
+(ERRADO)
 ![w:1000](./docs/arq-servicos.png)
+
+---
+
+## Arqitetura de Serviços
+(AJUSTADO)
+![w:700](./docs/arq-servicos2.png)
 
 ---
 
@@ -85,8 +94,17 @@ author: vitor maia
 
 ## Diagrama de Componentes
 
-![w:1000](./docs/component-diagram.png)
+(AJUSTADO - Removido o serviço Stores, que ficará junto de Accounts)
+![w:800](./docs/component-diagram.png)
 
 ---
 
+## Implementação
 
+<https://github.com/vitorcodesalittle/anps2021.1>
+
+---
+
+## Fim
+
+Feliz natal e ano novo 💫
